@@ -7,7 +7,8 @@
             'granularity': 'year'
         },
         cluster_by=['UF', 'COD_MUNICIPIO'],
-        description='Agregacao de indicadores educacionais por municipio'
+        description='Agregacao de indicadores educacionais por municipio',
+        post_hook="CREATE OR REPLACE TABLE `provas-de-conceitos`.`mec_educacao_dev`.`mart_educacao_municipio` AS SELECT * FROM {{ this }}"
     )
 }}
 

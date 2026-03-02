@@ -1,7 +1,8 @@
 {{
     config(
         materialized='table',
-        description='Analises agregadas por municipio com texto narrativo para Looker Studio'
+        description='Analises agregadas por municipio com texto narrativo para Looker Studio',
+        post_hook="CREATE OR REPLACE TABLE `provas-de-conceitos`.`mec_educacao_dev`.`mart_analises_municipio` AS SELECT * FROM {{ this }}"
     )
 }}
 

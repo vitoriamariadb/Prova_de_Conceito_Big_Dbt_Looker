@@ -6,7 +6,8 @@
             'data_type': 'date',
             'granularity': 'year'
         },
-        cluster_by=['UF']
+        cluster_by=['UF'],
+        post_hook="CREATE OR REPLACE TABLE `provas-de-conceitos`.`mec_educacao_dev`.`mart_educacao_uf` AS SELECT * FROM {{ this }}"
     )
 }}
 
