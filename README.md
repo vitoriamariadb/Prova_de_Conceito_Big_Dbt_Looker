@@ -58,7 +58,7 @@ Prova_de_Conceito_Big_Dbt_Looker/
 ```
 INEP/MEC ──▶ Download ──▶ BigQuery (raw) ──▶ dbt ──▶ Looker Studio
                               │
-                              └──▶ Python (analises) ──▶ PNG (graficos)
+                              └──▶ Python (análises) ──▶ PNG (gráficos)
 ```
 
 ---

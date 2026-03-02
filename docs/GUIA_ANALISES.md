@@ -25,7 +25,7 @@ Os scripts funcionam com duas fontes:
 1. **BigQuery (preferencial)**: Dados das tabelas marts via `data_loader.py`
 2. **CSV local**: Arquivo CSV passado como argumento
 
-**Requisito**: Conexao com BigQuery configurada (variavel GOOGLE_APPLICATION_CREDENTIALS ou ADC).
+**Requisito**: Conexão com BigQuery configurada (variável GOOGLE_APPLICATION_CREDENTIALS ou ADC).
 
 ---
 
@@ -52,7 +52,7 @@ python regressao_educacao.py ../../data/raw/dados_uf.csv  # CSV local
 - **R² Score**: Proporção da variância explicada (0 a 1)
 - **RMSE**: Erro médio de predição em pontos
 
-### Formato de Saida
+### Formato de Saída
 
 ```
 Coeficiente:       [valor calculado]
@@ -60,9 +60,9 @@ Intercepto:        [valor calculado]
 R² Score:          [valor calculado]
 RMSE:              [valor calculado]
 
-Interpretacao:
+Interpretação:
   Para cada 1% de aumento em escolas com internet,
-  a nota ENEM aumenta em media [coeficiente] pontos.
+  a nota ENEM aumenta em média [coeficiente] pontos.
 ```
 
 ### Output
@@ -125,12 +125,12 @@ python analise_impacto_financeiro.py ../../data/raw/d.csv  # CSV local
 - **Cenários**: Projeções para diferentes níveis de aumento (5%, 10%, 15%...)
 - **Gap Orçamentário**: Diferença entre orçamento atual e ideal por UF
 
-### Formato de Cenario
+### Formato de Cenário
 
 ```
-CENARIO: Aumento de [X]%
+CENÁRIO: Aumento de [X]%
   Impacto Nota ENEM: +[calculado] pontos
-  Reducao Abandono: -[calculado]%
+  Redução Abandono: -[calculado]%
 ```
 
 ### Output
@@ -245,8 +245,8 @@ Os scripts aceitam CSVs com as seguintes colunas:
 
 ## Resolução de Problemas
 
-### BigQuery nao disponivel
-Configure a variavel de ambiente GOOGLE_APPLICATION_CREDENTIALS apontando para o arquivo de credenciais do projeto.
+### BigQuery não disponível
+Configure a variável de ambiente GOOGLE_APPLICATION_CREDENTIALS apontando para o arquivo de credenciais do projeto.
 
 ### Erro de importação
 ```bash

@@ -28,7 +28,7 @@ wget -c https://download.inep.gov.br/microdados/microdados_enem_2023.zip
 curl -L "https://dados.gov.br/dados/conjuntos-dados/programa-dinheiro-direto-na-escola-pdde" -o pdde_info.html
 ```
 
-### SIOPE - Sistema de Informacoes sobre Orcamentos Publicos em Educacao
+### SIOPE - Sistema de Informações sobre Orçamentos Públicos em Educação
 
 ```bash
 curl -L "https://www.fnde.gov.br/siope/dadosAbertos" -o siope_dados.html
@@ -38,19 +38,19 @@ curl -L "https://www.fnde.gov.br/siope/dadosAbertos" -o siope_dados.html
 
 ## 2. Datasets Opcionais
 
-### SisIndigena - Sistema de Escolas Indigenas
+### SisIndígena - Sistema de Escolas Indígenas
 
 ```bash
 curl -L "https://dadosabertos.mec.gov.br/sisindigena" -o sisindigena_info.html
 ```
 
-### PNEERQ - Programa Nacional de Educacao Escolar Quilombola
+### PNEERQ - Programa Nacional de Educação Escolar Quilombola
 
 ```bash
 curl -L "https://dados.gov.br/dados/conjuntos-dados/pnnerq-escola-quilombo" -o pneerq_info.html
 ```
 
-### SISU - Sistema de Selecao Unificada
+### SISU - Sistema de Seleção Unificada
 
 ```bash
 curl -L "https://dadosabertos.mec.gov.br/sisu" -o sisu_info.html
@@ -70,9 +70,9 @@ curl -L "https://dadosabertos.mec.gov.br/fies" -o fies_info.html
 
 ---
 
-## 3. Descompactacao
+## 3. Descompactação
 
-Apos baixar os ZIPs, descompacte manualmente:
+Após baixar os ZIPs, descompacte manualmente:
 
 ```bash
 cd ~/Desenvolvimento/Prova_de_Conceito_Big_Dbt_Looker/bases_csv
@@ -85,9 +85,9 @@ unzip microdados_enem_2023.zip -d enem_2023/
 
 ---
 
-## 4. Renomeacoes Padronizadas
+## 4. Renomeações Padronizadas
 
-Apos extrair, renomeie para o padrao `mec_*`:
+Após extrair, renomeie para o padrão `mec_*`:
 
 ```bash
 cd ~/Desenvolvimento/Prova_de_Conceito_Big_Dbt_Looker/bases_csv
@@ -104,7 +104,7 @@ rm -f *.zip
 
 ---
 
-## 5. Validacao GCP
+## 5. Validação GCP
 
 Verifique suas credenciais antes de subir para BigQuery:
 
@@ -144,13 +144,13 @@ bq load --source_format=CSV --autodetect \
 
 ## Nuances e Edge Cases
 
-| Situacao | Solucao |
+| Situação | Solução |
 |----------|---------|
 | Link quebrado | Verifique em dados.gov.br ou inep.gov.br |
 | Arquivo muito grande (>2GB) | Use `wget -c` para continuar download |
 | Timeout | Adicione `--timeout=300` ao wget |
 | Encoding errado | Use `iconv -f ISO-8859-1 -t UTF-8` |
-| Colunas faltantes | Verifique dicionario de dados no ZIP |
+| Colunas faltantes | Verifique dicionário de dados no ZIP |
 
 ## Custos Estimados no BigQuery
 
@@ -162,4 +162,4 @@ bq load --source_format=CSV --autodetect \
 
 ---
 
-Estrutura de downloads pronta para copia manual!
+Estrutura de downloads pronta para cópia manual!
