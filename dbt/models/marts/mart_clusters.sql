@@ -1,7 +1,8 @@
 {{
     config(
         materialized='table',
-        description='Clusterizacao de UFs por indicadores educacionais usando Z-Score'
+        description='Clusterizacao de UFs por indicadores educacionais usando Z-Score',
+        post_hook="CREATE OR REPLACE TABLE `provas-de-conceitos`.`mec_educacao_dev`.`mart_clusters` AS SELECT * FROM {{ this }}"
     )
 }}
 
