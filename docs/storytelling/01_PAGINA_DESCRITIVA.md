@@ -18,7 +18,8 @@ KPIs principais do painel: total de matrículas, total de escolas, média ENEM e
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
 ```
 
 **Título de cada scorecard** (um por KPI):
@@ -64,7 +65,7 @@ Visualização da concentração de alunos por estado, com intensidade de cor pr
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+Censo Escolar da Educação Básica 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -97,7 +98,7 @@ Comparativo regional com percentuais de concentração de alunos.
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+Censo Escolar da Educação Básica 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -147,7 +148,7 @@ Comparativo de internet e laboratório entre estados.
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+Censo Escolar da Educação Básica 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -179,7 +180,7 @@ Total de docentes por estado com cores por região.
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+Censo Escolar da Educação Básica 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -223,7 +224,7 @@ Ranking de desempenho com linhas de referência para média nacional e meta PNE 
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+Microdados do ENEM 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -270,7 +271,7 @@ ORDER BY NOTA_MEDIA_ENEM DESC
 
 ## Tabela de Dados (BigQuery)
 
-**Fonte:** `mart_educacao_uf`
+**Tabela:** `mart_educacao_uf`
 
 | Coluna | Descrição |
 |--------|-----------|

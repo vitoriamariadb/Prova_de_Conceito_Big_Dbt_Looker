@@ -28,7 +28,8 @@ Dispersão com linha de tendência mostrando a correlação entre infraestrutura
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -63,8 +64,8 @@ Mapa de calor identificando quais variáveis têm maior correlação com o desem
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_correlacoes
-provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -104,7 +105,8 @@ Barras (% internet) + linha (nota ENEM) para comparar simultaneamente infraestru
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -144,7 +146,7 @@ Cada UF comparada à meta de 550 pontos do PNE, com gap positivo ou negativo.
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+Microdados do ENEM 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -183,8 +185,8 @@ Visualização das relações entre infraestrutura digital, infraestrutura físi
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
-provas-de-conceitos.mec_educacao_dev.mart_correlacoes
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -212,8 +214,8 @@ Resumo dos clusters identificados com quantidade de UFs, média ENEM e percentua
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_clusters
-provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -276,7 +278,7 @@ Formatação condicional em `PRIORIDADE_INVESTIMENTO`:
 
 ## Tabela de Dados (BigQuery)
 
-**Fonte:** `mart_correlacoes`
+**Tabela:** `mart_correlacoes`
 
 | Coluna | Descrição |
 |--------|-----------|

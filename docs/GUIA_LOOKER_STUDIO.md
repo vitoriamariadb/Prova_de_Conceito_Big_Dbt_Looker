@@ -135,6 +135,12 @@ Dados: Censo Escolar e ENEM 2023 — INEP/MEC
 
 **Fonte:**
 ```
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
+```
 provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
 ```
 
@@ -159,6 +165,11 @@ Crie 4 scorecards individuais com os campos abaixo:
 ### 6.2 Mapa Geográfico — Matrículas por UF
 
 **Fonte:**
+```
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
 ```
 provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
 ```
@@ -186,6 +197,11 @@ Distribuição de Matrículas por Estado — 2023
 ### 6.3 Tabela Resumo — Top UFs por ENEM
 
 **Fonte:**
+```
+Microdados do ENEM 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
 ```
 provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
 ```
@@ -218,6 +234,11 @@ Análise Descritiva por Unidade Federativa
 ### 7.1 Matrículas por Região
 
 **Fonte:**
+```
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
 ```
 provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
 ```
@@ -255,6 +276,11 @@ Matrículas por Região — Brasil 2023
 
 **Fonte:**
 ```
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
+```
 provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
 ```
 
@@ -285,6 +311,11 @@ Infraestrutura Digital e Científica por Estado — 2023
 
 **Fonte:**
 ```
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
+```
 provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
 ```
 
@@ -312,6 +343,11 @@ Distribuição do Corpo Docente por Estado — 2023
 ### 7.4 Desempenho no ENEM por Estado
 
 **Fonte:**
+```
+Microdados do ENEM 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
 ```
 provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
 ```
@@ -355,6 +391,12 @@ Análise Preditiva — Clusters e Correlações
 
 **Fonte:**
 ```
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
+```
 provas-de-conceitos.mec_educacao_dev.mart_clusters
 ```
 
@@ -391,6 +433,12 @@ Agrupamento de Estados por Perfil Educacional — 2023
 
 **Fonte:**
 ```
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
+```
 provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
 ```
 
@@ -418,6 +466,12 @@ Conectividade Escolar vs. Desempenho no ENEM — 2023
 ### 8.3 Matriz de Correlação (Heatmap)
 
 **Fonte:**
+```
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
 ```
 provas-de-conceitos.mec_educacao_dev.mart_correlacoes
 ```
@@ -448,6 +502,12 @@ Matriz de Correlação entre Indicadores Educacionais
 ### 8.4 Perfis de Clusters — Tabela Descritiva
 
 **Fonte:**
+```
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
 ```
 provas-de-conceitos.mec_educacao_dev.mart_clusters
 ```
@@ -491,6 +551,12 @@ Análise Prescritiva — Priorização de Investimentos
 
 **Fonte:**
 ```
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
+```
 provas-de-conceitos.mec_educacao_dev.mart_alocacao
 ```
 
@@ -525,6 +591,12 @@ Investimento Necessário por Estado — Estimativa 2023
 
 **Fonte:**
 ```
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
+```
 provas-de-conceitos.mec_educacao_dev.mart_simulacao_cenarios
 ```
 
@@ -554,6 +626,12 @@ Impacto Projetado por Cenário de Investimento
 
 **Fonte:**
 ```
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
+```
 provas-de-conceitos.mec_educacao_dev.mart_alocacao
 ```
 
@@ -580,10 +658,16 @@ Mapa de Necessidade de Investimento por Estado — 2023
 
 **Fonte:**
 ```
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
+```
 provas-de-conceitos.mec_educacao_dev.mart_alocacao
 ```
 
-**Fonte adicional (JOIN):**
+**Tabela adicional (JOIN):**
 ```
 provas-de-conceitos.mec_educacao_dev.mart_clusters
 ```
@@ -612,6 +696,11 @@ Ranking de Prioridade de Investimento por Estado — 2023
 ### 9.5 Déficit de Infraestrutura por Estado
 
 **Fonte:**
+```
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
 ```
 provas-de-conceitos.mec_educacao_dev.mart_alocacao
 ```

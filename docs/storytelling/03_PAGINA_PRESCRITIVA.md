@@ -34,7 +34,8 @@ Dispersão com PCA mostrando os agrupamentos naturais de estados por perfil educ
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_clusters
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -77,7 +78,8 @@ Visualização geográfica dos clusters educacionais no território brasileiro.
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_clusters
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -104,7 +106,8 @@ Investimento total estimado por estado, colorido por status de desempenho.
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_alocacao
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -147,8 +150,8 @@ Ranking de estados por necessidade de investimento com status, gaps de infraestr
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_alocacao
-provas-de-conceitos.mec_educacao_dev.mart_clusters
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -201,7 +204,8 @@ Impacto estimado de diferentes níveis de aumento orçamentário na nota ENEM e 
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_simulacao_cenarios
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -240,7 +244,8 @@ Visualização geográfica do investimento estimado por estado.
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_alocacao
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -270,7 +275,7 @@ Comparativo dos gaps de internet e laboratório por estado, com classificação 
 
 **Fonte:**
 ```
-provas-de-conceitos.mec_educacao_dev.mart_alocacao
+Censo Escolar da Educação Básica 2023 — INEP/MEC
 ```
 
 **Título:**
@@ -336,7 +341,7 @@ ORDER BY ORDEM_PRIORIDADE
 
 ## Tabelas de Dados (BigQuery)
 
-**Fonte 1:** `mart_clusters`
+**Tabela 1:** `mart_clusters`
 
 | Coluna | Descrição |
 |--------|-----------|
@@ -345,7 +350,7 @@ ORDER BY ORDEM_PRIORIDADE
 | DESCRICAO_CLUSTER | Nome descritivo |
 | PC1, PC2 | Componentes principais (PCA) |
 
-**Fonte 2:** `mart_alocacao`
+**Tabela 2:** `mart_alocacao`
 
 | Coluna | Descrição |
 |--------|-----------|
@@ -358,7 +363,7 @@ ORDER BY ORDEM_PRIORIDADE
 | INVESTIMENTO_TOTAL_ESTIMADO_BRL | Investimento total estimado em reais |
 | ORDEM_PRIORIDADE | Ranking de prioridade |
 
-**Fonte 3:** `mart_simulacao_cenarios`
+**Tabela 3:** `mart_simulacao_cenarios`
 
 | Coluna | Descrição |
 |--------|-----------|
