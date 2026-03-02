@@ -1,0 +1,40 @@
+# dbt
+target/
+dbt_packages/
+logs/
+dbt/profiles.yml
+dbt/.user.yml
+dbt/package-lock.yml
+
+# Credentials
+*.json
+credentials/
+!dbt/packages.yml
+
+# Dados (já carregados no BigQuery)
+data/
+*.csv
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Outputs gerados
+scripts/python/outputs/
+outputs/*.png
+outputs/*.csv
+outputs/log_setup.txt
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+*.swp
+
+# Logs
+*.log
+log_setup.txt

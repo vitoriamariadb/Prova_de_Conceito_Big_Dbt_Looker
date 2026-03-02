@@ -1,0 +1,3 @@
+SELECT *
+FROM {{ ref('stg_enem') }}
+WHERE NOTA_MEDIA < 0 OR NOTA_MEDIA > 1000

@@ -1,0 +1,168 @@
+version: 2
+
+models:
+  - name: mart_educacao_uf
+    description: "Mart agregado de indicadores educacionais por Unidade Federativa. Combina dados do Censo Escolar (matriculas, docentes, infraestrutura) com dados do ENEM (notas, renda). Utilizado para analises descritivas e dashboards no Looker Studio."
+    columns:
+      - name: ANO
+        description: "Ano de referencia dos dados agregados (formato YYYY)"
+        tests:
+          - not_null
+      - name: DATA_REFERENCIA
+        description: "Data de referencia para particionamento por ano"
+        tests:
+          - not_null
+      - name: UF
+        description: "Sigla da Unidade Federativa (ex: SP, RJ, MG)"
+        tests:
+          - not_null
+      - name: TOTAL_MATRICULAS
+        description: "Soma total de matriculas na educacao basica na UF"
+      - name: MATRICULAS_FUNDAMENTAL
+        description: "Soma de matriculas no ensino fundamental na UF"
+      - name: MATRICULAS_MEDIO
+        description: "Soma de matriculas no ensino medio na UF"
+      - name: TOTAL_DOCENTES
+        description: "Soma total de docentes na educacao basica na UF"
+      - name: TOTAL_ESCOLAS
+        description: "Quantidade de escolas distintas na UF"
+      - name: ALUNOS_POR_DOCENTE
+        description: "Razao entre total de matriculas e total de docentes. Indica a carga media por professor"
+      - name: PCT_ESCOLAS_INTERNET
+        description: "Percentual de escolas com acesso a internet na UF (0 a 100)"
+      - name: PCT_ESCOLAS_LABORATORIO
+        description: "Percentual de escolas com laboratorio de informatica na UF (0 a 100)"
+      - name: PCT_ESCOLAS_BIBLIOTECA
+        description: "Percentual de escolas com biblioteca na UF (0 a 100)"
+      - name: TOTAL_INSCRITOS_ENEM
+        description: "Quantidade de inscritos no ENEM que compareceram a todas as provas na UF"
+      - name: NOTA_MEDIA_ENEM
+        description: "Media das notas medias dos participantes do ENEM na UF"
+      - name: NOTA_MEDIA_MATEMATICA
+        description: "Media das notas de matematica dos participantes do ENEM na UF"
+      - name: NOTA_MEDIA_REDACAO
+        description: "Media das notas de redacao dos participantes do ENEM na UF"
+      - name: RENDA_MEDIA_FAMILIAR
+        description: "Media da renda familiar estimada dos participantes do ENEM na UF (em reais)"
+      - name: DESVIO_PADRAO_NOTA
+        description: "Desvio padrao das notas medias na UF. Indica dispersao do desempenho"
+      - name: DATA_CARGA
+        description: "Timestamp de quando o registro foi processado pelo dbt"
+
+  - name: mart_correlacoes
+    description: "Mart de analise de correlacoes entre variaveis educacionais. Calcula coeficientes de correlacao de Pearson entre indicadores como renda, infraestrutura e desempenho no ENEM. Utilizado para identificar relacoes estatisticas."
+    columns:
+      - name: PAR_VARIAVEIS
+        description: "Descricao do par de variaveis correlacionadas (ex: Renda x Nota ENEM)"
+        tests:
+          - not_null
+      - name: CORRELACAO
+        description: "Coeficiente de correlacao de Pearson (-1 a 1). Valores proximos de 1 indicam correlacao positiva forte"
+      - name: N_OBSERVACOES
+        description: "Numero de observacoes (UFs x Anos) utilizadas no calculo da correlacao"
+      - name: INTERPRETACAO
+        description: "Texto explicativo sobre o significado da correlacao calculada"
+
+  - name: mart_clusters
+    description: "Mart de clusterizacao das UFs por indicadores educacionais usando Z-Score. Agrupa estados em 4 clusters baseados em desempenho no ENEM e renda familiar, permitindo identificar grupos prioritarios para investimento."
+    columns:
+      - name: UF
+        description: "Sigla da Unidade Federativa"
+        tests:
+          - not_null
+          - unique
+      - name: ANO
+        description: "Ano de referencia da clusterizacao (mais recente disponivel)"
+        tests:
+          - not_null
+      - name: CLUSTER_ID
+        description: "Identificador numerico do cluster (1 a 4)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['1', '2', '3', '4']
+              quote: false
+      - name: DESCRICAO_CLUSTER
+        description: "Descricao qualitativa do cluster baseada em desempenho e renda"
+      - name: NOTA_MEDIA_ENEM
+        description: "Nota media do ENEM na UF utilizada na clusterizacao"
+      - name: RENDA_MEDIA_FAMILIAR
+        description: "Renda media familiar na UF utilizada na clusterizacao"
+      - name: PCT_ESCOLAS_INTERNET
+        description: "Percentual de escolas com internet na UF"
+      - name: Z_SCORE_NOTA
+        description: "Z-Score normalizado da nota ENEM da UF"
+      - name: Z_SCORE_RENDA
+        description: "Z-Score normalizado da renda familiar da UF"
+      - name: PRIORIDADE_INVESTIMENTO
+        description: "Nivel de prioridade para alocacao de recursos: ALTA, MEDIA, BAIXA ou MONITORAMENTO"
+        tests:
+          - accepted_values:
+              values: ['ALTA', 'MEDIA', 'BAIXA', 'MONITORAMENTO']
+      - name: DATA_PROCESSAMENTO
+        description: "Timestamp de quando o registro foi processado"
+
+  - name: mart_alocacao
+    description: "Mart de simulacao de alocacao de orcamento por UF. Calcula gaps de infraestrutura e docentes, estimando custos necessarios para atingir metas. Utilizado para analises prescritivas e recomendacoes de investimento."
+    columns:
+      - name: UF
+        description: "Sigla da Unidade Federativa"
+        tests:
+          - not_null
+          - unique
+      - name: ANO
+        description: "Ano de referencia da analise (mais recente disponivel)"
+      - name: TOTAL_MATRICULAS
+        description: "Total de matriculas na educacao basica na UF"
+      - name: ALUNOS_POR_DOCENTE
+        description: "Razao atual entre alunos e docentes na UF"
+      - name: DOCENTES_NECESSARIOS
+        description: "Quantidade de docentes adicionais necessarios para atingir razao de 25 alunos/docente"
+      - name: GAP_INTERNET_PCT
+        description: "Pontos percentuais faltantes para atingir 90 porcento das escolas com internet"
+      - name: GAP_LABORATORIO_PCT
+        description: "Pontos percentuais faltantes para atingir 70 porcento das escolas com laboratorio"
+      - name: STATUS_DESEMPENHO
+        description: "Classificacao do desempenho no ENEM: CRITICO (<500), ATENCAO (500-550), REGULAR (550-600) ou ADEQUADO (>600)"
+        tests:
+          - accepted_values:
+              values: ['CRITICO', 'ATENCAO', 'REGULAR', 'ADEQUADO']
+      - name: CUSTO_DOCENTES_MENSAL_BRL
+        description: "Custo mensal estimado para contratacao dos docentes necessarios (em reais)"
+      - name: CUSTO_INTERNET_ESTIMADO_BRL
+        description: "Custo estimado para implementacao de internet nas escolas faltantes (em reais)"
+      - name: CUSTO_LABORATORIO_ESTIMADO_BRL
+        description: "Custo estimado para implementacao de laboratorios nas escolas faltantes (em reais)"
+      - name: INVESTIMENTO_TOTAL_ESTIMADO_BRL
+        description: "Soma total dos custos estimados para a UF (docentes + internet + laboratorio em reais)"
+      - name: ORDEM_PRIORIDADE
+        description: "Ordenacao numerica de prioridade (1 = mais urgente, 4 = menos urgente)"
+
+  - name: mart_simulacao_cenarios
+    description: "Mart de simulacao de cenarios de investimento em educacao. Projeta impactos estimados de diferentes niveis de aumento orcamentario nos indicadores educacionais. Os coeficientes sao baseados em elasticidades da literatura academica."
+    columns:
+      - name: AUMENTO_PERCENTUAL
+        description: "Percentual de aumento no investimento (5 a 30%)"
+        tests:
+          - not_null
+      - name: CENARIO_NOME
+        description: "Nome do cenario formatado (ex: 10%)"
+      - name: TIPO_CENARIO
+        description: "Classificacao do cenario: Conservador, Moderado ou Agressivo"
+        tests:
+          - accepted_values:
+              values: ['Conservador', 'Moderado', 'Agressivo']
+      - name: TOTAL_MATRICULAS_BRASIL
+        description: "Total de matriculas no Brasil no ano de referencia"
+      - name: NOTA_BASE
+        description: "Nota media nacional de referencia"
+      - name: IMPACTO_NOTA_ENEM_PONTOS
+        description: "Impacto estimado na nota ENEM em pontos"
+      - name: REDUCAO_ABANDONO_PCT
+        description: "Reducao estimada na taxa de abandono em pontos percentuais"
+      - name: IMPACTO_IDEB_PONTOS
+        description: "Impacto estimado no IDEB em pontos"
+      - name: AVALIACAO_RISCO
+        description: "Avaliacao qualitativa do risco do cenario"
+      - name: DATA_PROCESSAMENTO
+        description: "Timestamp de quando o registro foi processado"

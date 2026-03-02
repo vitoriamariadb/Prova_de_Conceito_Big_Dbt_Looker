@@ -1,0 +1,59 @@
+{{
+    config(
+        materialized='view',
+        description='Dados brutos do Censo Escolar - fonte INEP/MEC'
+    )
+}}
+
+SELECT
+    CAST(CO_ENTIDADE AS STRING) AS COD_ESCOLA,
+    CAST(NO_ENTIDADE AS STRING) AS NOME_ESCOLA,
+    CAST(CO_MUNICIPIO AS STRING) AS COD_MUNICIPIO,
+    CAST(NO_MUNICIPIO AS STRING) AS NOME_MUNICIPIO,
+    CAST(SG_UF AS STRING) AS UF,
+    CAST(NU_ANO_CENSO AS INT64) AS ANO,
+
+    CASE SG_UF
+        WHEN 'AC' THEN 'Norte' WHEN 'AP' THEN 'Norte' WHEN 'AM' THEN 'Norte'
+        WHEN 'PA' THEN 'Norte' WHEN 'RO' THEN 'Norte' WHEN 'RR' THEN 'Norte'
+        WHEN 'TO' THEN 'Norte'
+        WHEN 'AL' THEN 'Nordeste' WHEN 'BA' THEN 'Nordeste' WHEN 'CE' THEN 'Nordeste'
+        WHEN 'MA' THEN 'Nordeste' WHEN 'PB' THEN 'Nordeste' WHEN 'PE' THEN 'Nordeste'
+        WHEN 'PI' THEN 'Nordeste' WHEN 'RN' THEN 'Nordeste' WHEN 'SE' THEN 'Nordeste'
+        WHEN 'DF' THEN 'Centro-Oeste' WHEN 'GO' THEN 'Centro-Oeste'
+        WHEN 'MT' THEN 'Centro-Oeste' WHEN 'MS' THEN 'Centro-Oeste'
+        WHEN 'ES' THEN 'Sudeste' WHEN 'MG' THEN 'Sudeste'
+        WHEN 'RJ' THEN 'Sudeste' WHEN 'SP' THEN 'Sudeste'
+        WHEN 'PR' THEN 'Sul' WHEN 'RS' THEN 'Sul' WHEN 'SC' THEN 'Sul'
+        ELSE 'Desconhecida'
+    END AS REGIAO,
+
+    CASE TP_DEPENDENCIA
+        WHEN 1 THEN 'Federal'
+        WHEN 2 THEN 'Estadual'
+        WHEN 3 THEN 'Municipal'
+        WHEN 4 THEN 'Privada'
+        ELSE 'Desconhecida'
+    END AS REDE,
+
+    CASE TP_LOCALIZACAO
+        WHEN 1 THEN 'Urbana'
+        WHEN 2 THEN 'Rural'
+        ELSE 'Desconhecida'
+    END AS LOCALIZACAO,
+
+    COALESCE(SAFE_CAST(QT_MAT_BAS AS INT64), 0) AS MATRICULAS_TOTAL,
+    COALESCE(SAFE_CAST(QT_MAT_FUND AS INT64), 0) AS MATRICULAS_FUNDAMENTAL,
+    COALESCE(SAFE_CAST(QT_MAT_MED AS INT64), 0) AS MATRICULAS_MEDIO,
+    COALESCE(SAFE_CAST(QT_DOC_BAS AS INT64), 0) AS DOCENTES_TOTAL,
+
+    COALESCE(SAFE_CAST(IN_INTERNET AS INT64), 0) = 1 AS TEM_INTERNET,
+    COALESCE(SAFE_CAST(IN_LABORATORIO_INFORMATICA AS INT64), 0) = 1 AS TEM_LABORATORIO,
+    COALESCE(SAFE_CAST(IN_BIBLIOTECA AS INT64), 0) = 1 AS TEM_BIBLIOTECA,
+    COALESCE(SAFE_CAST(IN_QUADRA_ESPORTES AS INT64), 0) = 1 AS TEM_QUADRA,
+
+    DATE(CONCAT(CAST(NU_ANO_CENSO AS STRING), '-01-01')) AS DATA_REFERENCIA,
+    CURRENT_TIMESTAMP() AS DATA_CARGA
+
+FROM {{ source('raw', 'raw_censo_escolas') }}
+WHERE NU_ANO_CENSO IS NOT NULL

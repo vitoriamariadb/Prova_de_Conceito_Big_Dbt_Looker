@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: stg_censo_escolar
+    description: "Dados de staging do Censo Escolar MEC. Contem informacoes sobre escolas, matriculas, docentes e infraestrutura por UF e municipio."
+    columns:
+      - name: ANO
+        description: "Ano de referencia do Censo Escolar"
+        tests:
+          - not_null
+      - name: DATA_REFERENCIA
+        description: "Data de referencia para particionamento"
+        tests:
+          - not_null
+      - name: UF
+        description: "Sigla da Unidade Federativa"
+        tests:
+          - not_null
+      - name: COD_ESCOLA
+        description: "Codigo unico da escola"
+        tests:
+          - not_null
+      - name: REDE
+        description: "Rede de ensino: Federal, Estadual, Municipal ou Privada"
+      - name: LOCALIZACAO
+        description: "Localizacao da escola: Urbana ou Rural"
+      - name: MATRICULAS_TOTAL
+        description: "Quantidade total de matriculas"
+      - name: DOCENTES_TOTAL
+        description: "Quantidade total de docentes"
+      - name: TEM_INTERNET
+        description: "Indica se a escola possui internet"
+      - name: TEM_LABORATORIO
+        description: "Indica se a escola possui laboratorio"
+
+  - name: stg_enem
+    description: "Dados de staging do ENEM. Contem informacoes sobre inscricoes, notas e dados socioeconomicos."
+    columns:
+      - name: ID_INSCRICAO
+        description: "Numero unico de inscricao"
+        tests:
+          - not_null
+      - name: ANO
+        description: "Ano de realizacao do ENEM"
+        tests:
+          - not_null
+      - name: UF
+        description: "Sigla da UF da escola do participante (pode ser nulo para treineiros)"
+      - name: NOTA_MEDIA
+        description: "Media das 5 notas"
+      - name: RENDA_FAMILIAR_ESTIMADA
+        description: "Renda familiar mensal estimada"
+      - name: PRESENTE_TODAS_PROVAS
+        description: "Indica se esteve presente em todas as provas"

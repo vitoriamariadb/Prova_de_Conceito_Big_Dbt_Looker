@@ -1,0 +1,47 @@
+version: 2
+
+sources:
+  - name: raw
+    database: provas-de-conceitos
+    schema: mec_educacao_dev
+    description: "Dados brutos carregados do INEP/MEC"
+    tables:
+      - name: raw_censo_escolas
+        description: "Microdados do Censo Escolar - Escolas"
+      - name: raw_enem_microdados
+        description: "Microdados do ENEM"
+
+models:
+  - name: raw_censo_escolar
+    description: "View com dados do Censo Escolar padronizados"
+    columns:
+      - name: COD_ESCOLA
+        description: "Codigo unico da escola (INEP)"
+      - name: UF
+        description: "Sigla da Unidade Federativa"
+      - name: REGIAO
+        description: "Regiao geografica"
+      - name: REDE
+        description: "Rede de ensino (Federal, Estadual, Municipal, Privada)"
+      - name: LOCALIZACAO
+        description: "Urbana ou Rural"
+      - name: MATRICULAS_TOTAL
+        description: "Total de matriculas na escola"
+      - name: TEM_INTERNET
+        description: "Escola possui internet"
+      - name: TEM_LABORATORIO
+        description: "Escola possui laboratorio de informatica"
+
+  - name: raw_enem
+    description: "View com dados do ENEM padronizados"
+    columns:
+      - name: ID_INSCRICAO
+        description: "Numero de inscricao do participante"
+      - name: ANO
+        description: "Ano de realizacao do ENEM"
+      - name: UF
+        description: "UF da escola do participante"
+      - name: NOTA_MEDIA
+        description: "Media das 5 notas do ENEM"
+      - name: RENDA_FAMILIAR_ESTIMADA
+        description: "Renda familiar declarada (em reais)"
