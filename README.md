@@ -1,92 +1,94 @@
-# Prova de Conceito: MEC + BigQuery + dbt + Looker Studio
+# Análise Educacional ENEM — BigQuery + dbt + Looker Studio
 
-Pipeline de dados educacionais do MEC para análise e visualização em dashboard corporativo.
+Pipeline de dados educacionais do MEC/INEP com clusterização de estados, simulação de cenários de investimento e dashboard analítico em quatro camadas: descritiva, preditiva, prescritiva e executiva.
 
-**Projeto BigQuery**: `provas-de-conceitos`
-**Dataset**: `mec_educacao_dev`
-**Objetivo**: Demonstrar competências em engenharia de dados com foco em educação brasileira.
+**[Acessar o projeto completo](https://github.com/vitoriamariadb/Prova_de_Conceito_Big_Dbt_Looker/tree/main)**
 
 ---
 
-## Estrutura do Projeto
+## Contexto
+
+A desigualdade educacional brasileira se manifesta com precisão nos microdados do ENEM: estados do Norte e Nordeste registram médias consistentemente abaixo dos 550 pontos do PNE enquanto o Sul e Sudeste superam essa marca. Este projeto transforma essa assimetria em análise quantificada — identificando quais estados precisam de intervenção, quanto isso custa e qual impacto pode ser esperado.
+
+---
+
+## Stack
+
+| Camada | Tecnologia |
+|--------|------------|
+| Armazenamento | Google BigQuery |
+| Transformação | dbt (arquitetura medallion: raw → staging → marts) |
+| Visualização | Looker Studio |
+| Análise estatística | Python — pandas, scikit-learn, matplotlib |
+| Versionamento | Git + GitHub |
+| Orquestração local | Bash |
+
+---
+
+## Arquitetura
 
 ```
-Prova_de_Conceito_Big_Dbt_Looker/
-├── dbt/
-│   ├── models/
-│   │   ├── raw/                  # Views sobre dados brutos INEP
-│   │   ├── staging/              # Limpeza e padronização
-│   │   └── marts/                # Agregações e análises
-│   ├── seeds/                    # Dimensões estáticas (municípios, calendário)
-│   ├── macros/
-│   ├── tests/
-│   └── dbt_project.yml
-├── scripts/
-│   ├── python/
-│   │   ├── etl/                  # Download e carga INEP
-│   │   │   ├── download_censo.py
-│   │   │   ├── download_enem.py
-│   │   │   └── carregar_bigquery.py
-│   │   ├── utils/                # Módulos compartilhados
-│   │   │   ├── data_loader.py
-│   │   │   └── estilo_corporativo.py
-│   │   ├── regressao_educacao.py
-│   │   ├── analise_clusterizacao.py
-│   │   ├── analise_impacto_financeiro.py
-│   │   ├── analise_correlacao_causalidade.py
-│   │   └── gerar_graficos_corporativos.py
-│   └── bash/
-├── data/
-│   ├── raw/                      # Microdados INEP
-│   └── processed/
-├── docs/
-│   ├── GUIA_LOOKER_STUDIO.md     # Passo a passo do dashboard
-│   ├── DICIONARIO_DADOS.md       # Dicionário de dados
-│   ├── PIPELINE_ETL.md           # Fluxo completo
-│   ├── storytelling/             # Narrativas por página
-│   └── REFERENCIAS_METODOLOGICAS.md
-├── outputs/                      # Gráficos gerados (PNG)
-├── credentials/                  # GCP keys (NAO COMMITAR)
-├── notebooks/                    # Notebooks Colab
-└── requirements.txt
+INEP/MEC
+  └── Censo Escolar 2023
+  └── Microdados ENEM 2023
+        │
+        ▼
+  BigQuery (raw)
+        │
+        ▼
+  dbt — staging (limpeza e padronização)
+        │
+        ▼
+  dbt — marts (7 modelos analíticos)
+        │
+        ▼
+  Looker Studio (4 páginas)
 ```
 
 ---
 
-## Fluxo de Dados
+## Modelos dbt
 
-```
-INEP/MEC ──▶ Download ──▶ BigQuery (raw) ──▶ dbt ──▶ Looker Studio
-                              │
-                              └──▶ Python (análises) ──▶ PNG (gráficos)
-```
+| Modelo | Camada | Descrição |
+|--------|--------|-----------|
+| `raw_censo_escolar` | Raw | View padronizada sobre microdados do Censo Escolar |
+| `raw_enem` | Raw | View padronizada sobre microdados do ENEM |
+| `stg_censo_escolar` | Staging | Limpeza de escolas, matrículas, docentes e infraestrutura |
+| `stg_enem` | Staging | Limpeza de notas, renda e dados socioeconômicos |
+| `mart_educacao_uf` | Mart | Indicadores agregados por Unidade Federativa |
+| `mart_educacao_municipio` | Mart | Indicadores por município (5.571 cidades) |
+| `mart_clusters` | Mart | Clusterização de UFs por Z-Score — perfis de desempenho |
+| `mart_correlacoes` | Mart | Correlação de Pearson entre variáveis educacionais |
+| `mart_alocacao` | Mart | Gaps de infraestrutura e estimativa de investimento por UF |
+| `mart_simulacao_cenarios` | Mart | Projeção de impacto por cenário de aumento orçamentário |
 
 ---
 
-## Setup Rápido
+## Dashboard
 
-### 1. Instalação
+Quatro camadas analíticas progressivas:
+
+**Resumo Executivo** — KPIs nacionais, mapa de matrículas por UF e ranking de desempenho ENEM.
+
+**Análise Descritiva** — Infraestrutura digital e científica, distribuição do corpo docente e desempenho ENEM por estado e região, com filtros dinâmicos de ano, UF e município.
+
+**Análise Preditiva** — Clusterização de estados em quatro perfis por Z-Score (nota × renda), mapa de bolhas georreferenciado e matriz de correlação de Pearson entre os principais indicadores.
+
+**Análise Prescritiva** — Ranking de prioridade de investimento por estado, simulação de seis cenários orçamentários com projeção de ganho no ENEM e redução de evasão.
+
+---
+
+## Setup
 
 ```bash
+# Instalação
 chmod +x install.sh && ./install.sh
 source venv/bin/activate
-```
 
-### 2. Configurar GCP
+# Credenciais GCP
+export GOOGLE_APPLICATION_CREDENTIALS="Credentials/gcp_key.json"
 
-```bash
-# Credenciais
-export GOOGLE_APPLICATION_CREDENTIALS="credentials/gcp_key.json"
-
-# Ou via gcloud
-gcloud auth application-default login
-gcloud config set project provas-de-conceitos
-```
-
-### 3. Executar Pipeline
-
-```bash
-# Download dos dados INEP (opcional - dados simulados funcionam sem isso)
+# Pipeline completo
 cd scripts/python/etl
 python download_censo.py 2023
 python download_enem.py 2023
@@ -95,162 +97,31 @@ python carregar_bigquery.py 2023
 # Transformações dbt
 cd ../../../dbt
 dbt deps && dbt run && dbt test
-
-# Gerar gráficos corporativos
-cd ../scripts/python
-python gerar_graficos_corporativos.py
-```
-
----
-
-## Modelos dbt
-
-### Raw (Views sobre dados brutos)
-
-| Modelo | Descrição |
-|--------|-----------|
-| `raw_censo_escolar` | Dados padronizados do Censo Escolar INEP |
-| `raw_enem` | Dados padronizados do ENEM INEP |
-
-### Staging (Limpeza)
-
-| Modelo | Descrição |
-|--------|-----------|
-| `stg_censo_escolar` | Escolas, matrículas, docentes, infraestrutura |
-| `stg_enem` | Notas, renda, dados socioeconômicos |
-
-### Marts (Análises)
-
-| Modelo | Descrição | Tipo |
-|--------|-----------|------|
-| `mart_educacao_uf` | Indicadores agregados por UF | Descritivo |
-| `mart_educacao_municipio` | Indicadores por município | Descritivo |
-| `mart_analises_municipio` | Análises com texto narrativo | Storytelling |
-| `mart_clusters` | Clusterização de UFs | Preditivo |
-| `mart_correlacoes` | Correlações entre variáveis | Preditivo |
-| `mart_alocacao` | Priorização de investimentos | Prescritivo |
-| `mart_simulacao_cenarios` | Simulação de impacto | Prescritivo |
-
----
-
-## Dashboard Looker Studio
-
-### Configuração
-- **Dimensões**: 1588 x 2246 px (formato retrato/PDF)
-- **Páginas**: 4 (Resumo Executivo, Descritiva, Preditiva, Prescritiva)
-- **Estilo**: Corporativo/Governamental
-
-### Páginas
-
-1. **Resumo Executivo**: Apresentação do estudo e KPIs principais
-2. **Análise Descritiva**: Matrículas, docentes, infraestrutura por UF/Região
-3. **Análise Preditiva**: Clusters, correlações, regressão nota x infraestrutura
-4. **Análise Prescritiva**: Priorização de investimentos, simulação de cenários
-
-### Filtros
-- Ano
-- UF
-- Município (5.571 municípios)
-- Região
-
-**Guia completo**: [docs/GUIA_LOOKER_STUDIO.md](docs/GUIA_LOOKER_STUDIO.md)
-
----
-
-## Gráficos Python
-
-### Estilo Corporativo
-
-Os scripts geram gráficos em formato de alta qualidade:
-- **Dimensões**: 1588 x 2246 px
-- **DPI**: 150
-- **Paleta**: Azul institucional (#1B4F72, #2874A6, #5DADE2)
-
-### Execução
-
-```bash
-source venv/bin/activate
-cd scripts/python
-
-# Gerar todos os gráficos
-python gerar_graficos_corporativos.py
-
-# Ou individualmente
-python regressao_educacao.py
-python analise_clusterizacao.py
-python analise_correlacao_causalidade.py
-python analise_impacto_financeiro.py
-```
-
-### Outputs
-
-```
-outputs/
-├── regressao_corporativo.png
-├── clusters_corporativo.png
-├── correlacao_corporativo.png
-└── investimentos_corporativo.png
 ```
 
 ---
 
 ## Fontes de Dados
 
-| Dataset | Fonte | URL |
-|---------|-------|-----|
-| Censo Escolar | INEP | gov.br/inep/microdados/censo-escolar |
-| ENEM | INEP | gov.br/inep/microdados/enem |
-| Municípios | IBGE | ibge.gov.br/cidades-e-estados |
-
-**Compatibilidade**: O projeto funciona com dados simulados (fallback) ou dados reais do INEP.
-
----
-
-## Documentação
-
-| Documento | Descrição |
-|-----------|-----------|
-| [DICIONARIO_DADOS.md](docs/DICIONARIO_DADOS.md) | Dicionário de dados completo |
-| [PIPELINE_ETL.md](docs/PIPELINE_ETL.md) | Fluxo de dados detalhado |
-| [REFERENCIAS_METODOLOGICAS.md](docs/REFERENCIAS_METODOLOGICAS.md) | Fontes e metodologia |
-| [storytelling/](docs/storytelling/) | Narrativas por página do dashboard |
-
----
-
-## Custos BigQuery
-
-| Operação | Custo Estimado |
-|----------|----------------|
-| Armazenamento | ~R$ 0,50/mês (5GB) |
-| Queries | ~R$ 12,50/mês (100GB) |
-
-**Otimizações aplicadas**:
-- Particionamento por ANO
-- Clusterização por UF
-- Materialização de marts
-
----
-
-## Contribuindo
-
-Veja [CONTRIBUTING.md](CONTRIBUTING.md)
-
----
-
-## Licença
-
-GPL-3.0 - Veja [LICENSE](LICENSE)
+| Dataset | Fonte |
+|---------|-------|
+| Censo Escolar da Educação Básica | INEP/MEC — microdados.inep.gov.br |
+| Microdados do ENEM | INEP/MEC — microdados.inep.gov.br |
 
 ---
 
 ## Autora
 
-**Vitória Maria** - Engenheira de Dados
+**Vitória Maria** — Engenheira e Analista de Dados
 
-Competências demonstradas:
-- Modelagem dimensional (dbt)
-- Data Warehouse (BigQuery)
-- Visualização (Looker Studio)
-- Análise de dados (Python/scikit-learn)
-- Automação (Bash/ETL)
-- Versionamento (Git/GitHub)
+Competências aplicadas neste projeto:
+
+- Engenharia de dados com dbt e BigQuery (modelagem medallion, testes, documentação)
+- Análise estatística: Z-Score, correlação de Pearson, clusterização por perfil
+- Visualização analítica e storytelling orientado a decisão de política pública
+- ETL automatizado com Python e integração com APIs do governo federal
+- Versionamento e entrega contínua com Git/GitHub
+
+---
+
+*Dados públicos. Código aberto. GPL-3.0.*
