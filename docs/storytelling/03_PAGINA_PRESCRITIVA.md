@@ -32,7 +32,15 @@ Estima o impacto de diferentes níveis de aumento orçamentário nos indicadores
 
 Dispersão com PCA mostrando os agrupamentos naturais de estados por perfil educacional.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_clusters`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_clusters
+```
+
+**Título:**
+```
+Agrupamento de Estados por Perfil Educacional — 2023
+```
 
 ```sql
 SELECT UF, PC1, PC2, CLUSTER_ID, DESCRICAO_CLUSTER
@@ -47,7 +55,6 @@ FROM `provas-de-conceitos.mec_educacao_dev.mart_clusters`
 | Eixo Y | Componente Principal 2 (Infraestrutura) |
 | Dimensão de cor | Cluster |
 | Rótulos de ponto | UF |
-| Título | Agrupamento de Estados por Perfil Educacional — 2023 |
 
 Cores por cluster:
 
@@ -68,7 +75,15 @@ Cores por cluster:
 
 Visualização geográfica dos clusters educacionais no território brasileiro.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_clusters`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_clusters
+```
+
+**Título:**
+```
+Mapa de Perfis Educacionais por Estado — 2023
+```
 
 **Rótulos sugeridos:**
 
@@ -76,7 +91,6 @@ Visualização geográfica dos clusters educacionais no território brasileiro.
 |----------|----------------|
 | Dimensão | Estado (UF) |
 | Dimensão de cor | Cluster (Perfil Educacional) |
-| Título | Mapa de Perfis Educacionais por Estado — 2023 |
 
 **Narrativa:** A dimensão geográfica dos clusters revela padrões regionais nítidos: estados do Norte e Nordeste tendem ao cluster Prioritário, enquanto Sul e Sudeste concentram os clusters de Alto Desempenho e Médio. Esse padrão não é coincidência — reflete décadas de desigualdade de investimento público em infraestrutura e formação de professores entre as regiões.
 
@@ -88,7 +102,15 @@ Visualização geográfica dos clusters educacionais no território brasileiro.
 
 Investimento total estimado por estado, colorido por status de desempenho.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_alocacao`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_alocacao
+```
+
+**Título:**
+```
+Investimento Necessário por Estado — Estimativa 2023
+```
 
 ```sql
 SELECT UF, INVESTIMENTO_TOTAL_ESTIMADO_BRL, STATUS_DESEMPENHO
@@ -103,7 +125,6 @@ ORDER BY INVESTIMENTO_TOTAL_ESTIMADO_BRL DESC
 | Dimensão | Estado (UF) |
 | Métrica | Investimento Estimado (R$) |
 | Dimensão de cor | Status de Desempenho |
-| Título | Investimento Necessário por Estado — Estimativa 2023 |
 
 Cores por status:
 
@@ -124,7 +145,16 @@ Cores por status:
 
 Ranking de estados por necessidade de investimento com status, gaps de infraestrutura e valores estimados.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_alocacao`, `provas-de-conceitos.mec_educacao_dev.mart_clusters`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_alocacao
+provas-de-conceitos.mec_educacao_dev.mart_clusters
+```
+
+**Título:**
+```
+Ranking de Priorização de Investimentos por Estado — 2023
+```
 
 ```sql
 SELECT
@@ -169,7 +199,15 @@ Formatação condicional em `STATUS_DESEMPENHO`:
 
 Impacto estimado de diferentes níveis de aumento orçamentário na nota ENEM e na redução do abandono escolar.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_simulacao_cenarios`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_simulacao_cenarios
+```
+
+**Título:**
+```
+Impacto Projetado por Cenário de Investimento
+```
 
 ```sql
 SELECT CENARIO_NOME, AUMENTO_PERCENTUAL, IMPACTO_NOTA_ENEM_PONTOS,
@@ -184,7 +222,6 @@ FROM `provas-de-conceitos.mec_educacao_dev.mart_simulacao_cenarios`
 | Dimensão | Cenário de Investimento |
 | Métrica 1 | Ganho Estimado no ENEM (pontos) |
 | Métrica 2 | Redução Estimada de Abandono (%) |
-| Título | Impacto Projetado por Cenário de Investimento |
 
 | Série | Cor (hex) |
 |-------|-----------|
@@ -201,7 +238,15 @@ FROM `provas-de-conceitos.mec_educacao_dev.mart_simulacao_cenarios`
 
 Visualização geográfica do investimento estimado por estado.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_alocacao`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_alocacao
+```
+
+**Título:**
+```
+Mapa de Necessidade de Investimento por Estado — 2023
+```
 
 **Rótulos sugeridos:**
 
@@ -210,7 +255,6 @@ Visualização geográfica do investimento estimado por estado.
 | Dimensão | Estado (UF) |
 | Métrica | Investimento Estimado (R$) |
 | Escala de cor | Azul claro (baixo) → Vermelho escuro (alto) |
-| Título | Mapa de Necessidade de Investimento por Estado — 2023 |
 
 Escala de cor: `#5DADE2` (mínimo) → `#943126` (máximo — maior investimento necessário)
 
@@ -224,7 +268,15 @@ Escala de cor: `#5DADE2` (mínimo) → `#943126` (máximo — maior investimento
 
 Comparativo dos gaps de internet e laboratório por estado, com classificação por status.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_alocacao`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_alocacao
+```
+
+**Título:**
+```
+Déficit de Infraestrutura por Estado — 2023
+```
 
 ```sql
 SELECT UF, GAP_INTERNET_PCT, GAP_LABORATORIO_PCT, STATUS_DESEMPENHO
@@ -239,7 +291,6 @@ ORDER BY ORDEM_PRIORIDADE
 | Dimensão | Estado (UF) |
 | Métrica 1 | Gap Internet (pontos percentuais) |
 | Métrica 2 | Gap Laboratório (pontos percentuais) |
-| Título | Déficit de Infraestrutura por Estado — 2023 |
 
 | Série | Cor (hex) |
 |-------|-----------|

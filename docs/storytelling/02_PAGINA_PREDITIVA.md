@@ -26,7 +26,15 @@ Mede a força da relação linear entre variáveis (-1 a +1)
 
 Dispersão com linha de tendência mostrando a correlação entre infraestrutura digital e desempenho.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
+
+**Título:**
+```
+Conectividade Escolar vs. Desempenho no ENEM — 2023
+```
 
 ```sql
 SELECT PCT_ESCOLAS_INTERNET, NOTA_MEDIA_ENEM, UF
@@ -41,7 +49,6 @@ WHERE ANO = 2023
 | Eixo X | % Escolas Conectadas à Internet |
 | Eixo Y | Desempenho Médio ENEM (0–1000) |
 | Rótulos de ponto | UF |
-| Título | Conectividade Escolar vs. Desempenho no ENEM — 2023 |
 | Cor dos pontos | `#2874A6` |
 
 **Narrativa:** A dispersão evidencia uma correlação positiva clara: estados com maior percentual de escolas conectadas tendem a apresentar notas ENEM mais altas. A linha de tendência ascendente confirma que infraestrutura digital é um preditor relevante de desempenho. Estados como AP e MA — baixo índice de conectividade e notas abaixo da média — são os candidatos naturais a programas de expansão de acesso digital.
@@ -54,7 +61,16 @@ WHERE ANO = 2023
 
 Mapa de calor identificando quais variáveis têm maior correlação com o desempenho.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_correlacoes`, `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_correlacoes
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
+
+**Título:**
+```
+Matriz de Correlação entre Indicadores Educacionais
+```
 
 ```sql
 SELECT * FROM `provas-de-conceitos.mec_educacao_dev.mart_correlacoes`
@@ -67,7 +83,6 @@ SELECT * FROM `provas-de-conceitos.mec_educacao_dev.mart_correlacoes`
 | Dimensão linha | Variável A |
 | Dimensão coluna | Variável B |
 | Métrica | Correlação de Pearson |
-| Título | Matriz de Correlação entre Indicadores Educacionais |
 
 Escala de cor do heatmap:
 
@@ -87,7 +102,15 @@ Escala de cor do heatmap:
 
 Barras (% internet) + linha (nota ENEM) para comparar simultaneamente infraestrutura e desempenho.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
+
+**Título:**
+```
+Conectividade e Desempenho por Estado — 2023
+```
 
 ```sql
 SELECT UF, PCT_ESCOLAS_INTERNET, NOTA_MEDIA_ENEM
@@ -103,7 +126,6 @@ ORDER BY NOTA_MEDIA_ENEM DESC
 | Dimensão | Estado (UF) |
 | Métrica barra | % Escolas Conectadas |
 | Métrica linha | Desempenho Médio ENEM (0–1000) |
-| Título | Conectividade e Desempenho por Estado — 2023 |
 
 | Série | Cor (hex) |
 |-------|-----------|
@@ -120,7 +142,15 @@ ORDER BY NOTA_MEDIA_ENEM DESC
 
 Cada UF comparada à meta de 550 pontos do PNE, com gap positivo ou negativo.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
+
+**Título:**
+```
+Gap em Relação à Meta PNE por Estado — 2023
+```
 
 ```sql
 SELECT UF, NOTA_MEDIA_ENEM, 550 AS META_NOTA
@@ -135,7 +165,6 @@ WHERE ANO = 2023
 | Dimensão | Estado (UF) |
 | Métrica realizada | Desempenho Médio ENEM (0–1000) |
 | Linha de meta | Meta PNE: 550 pontos |
-| Título | Gap em Relação à Meta PNE por Estado — 2023 |
 
 | Status | Cor (hex) | Critério |
 |--------|-----------|----------|
@@ -152,7 +181,16 @@ WHERE ANO = 2023
 
 Visualização das relações entre infraestrutura digital, infraestrutura física e desempenho educacional com coeficientes de correlação.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`, `provas-de-conceitos.mec_educacao_dev.mart_correlacoes`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+provas-de-conceitos.mec_educacao_dev.mart_correlacoes
+```
+
+**Título:**
+```
+Relações entre Infraestrutura e Desempenho Educacional
+```
 
 **Rótulos sugeridos:**
 
@@ -161,7 +199,6 @@ Visualização das relações entre infraestrutura digital, infraestrutura físi
 | Nó central | Desempenho ENEM |
 | Nós periféricos | % Escolas Conectadas / % Escolas com Laboratório |
 | Arestas | Coeficiente de Correlação de Pearson |
-| Título | Relações entre Infraestrutura e Desempenho Educacional |
 
 **Narrativa:** O diagrama de mediação revela se a infraestrutura digital age diretamente sobre o desempenho ou se é mediada por outros fatores (como infraestrutura física). Coeficientes de correlação nas arestas acima de 0.5 sugerem relações suficientemente fortes para embasar decisões de alocação de recursos.
 
@@ -173,7 +210,16 @@ Visualização das relações entre infraestrutura digital, infraestrutura físi
 
 Resumo dos clusters identificados com quantidade de UFs, média ENEM e percentual de internet.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_clusters`, `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_clusters
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
+
+**Título:**
+```
+Perfil dos Clusters Educacionais por Estado — 2023
+```
 
 **Rótulos sugeridos das colunas:**
 

@@ -1,31 +1,54 @@
 # Guia: Dashboard Educação MEC no Looker Studio
 
-## Conexão com BigQuery
-
-### Acesso
-1. Acesse [lookerstudio.google.com](https://lookerstudio.google.com)
-2. Clique em **Criar** > **Relatório**
-3. Selecione **BigQuery** como fonte de dados
-4. Autorize o acesso à sua conta Google
-5. Navegue até: Projeto `provas-de-conceitos` > Dataset `mec_educacao_dev`
-
-### Tabelas Disponíveis
-
-| Tabela | Uso |
-|--------|-----|
-| `mart_educacao_uf` | Análise descritiva por UF |
-| `mart_educacao_municipio` | Filtros por município |
-| `mart_analises_municipio` | Textos narrativos (storytelling) |
-| `mart_clusters` | Clusterização de UFs |
-| `mart_correlacoes` | Correlações entre variáveis |
-| `mart_alocacao` | Priorização de investimentos |
-| `mart_simulacao_cenarios` | Simulação de cenários |
+> Guia completo de configuração do dashboard educacional MEC/INEP no Looker Studio.
+> Todos os títulos e fontes de dados estão em blocos de código — basta clicar e copiar.
 
 ---
 
-## Campo Calculado: REGIAO
+## Pré-requisitos
 
-Crie este campo calculado em todas as fontes que usem a coluna `UF`. No Looker Studio, clique em **Adicionar campo** > **Campo calculado** e cole:
+- Conta Google com acesso ao projeto BigQuery `provas-de-conceitos`
+- Permissão mínima: `BigQuery Data Viewer` no dataset `mec_educacao_dev`
+- dbt executado com sucesso (tabelas `mart_*` disponíveis)
+
+---
+
+## 1. Criar o Relatório
+
+1. Acesse [lookerstudio.google.com](https://lookerstudio.google.com)
+2. Clique em **Criar** > **Relatório**
+3. Em "Adicionar dados ao relatório", selecione **BigQuery**
+4. Autorize o acesso à sua conta Google
+5. Selecione: **Projeto** `provas-de-conceitos` > **Dataset** `mec_educacao_dev`
+6. Selecione a tabela principal:
+
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
+
+7. Clique em **Adicionar** > **Adicionar ao relatório**
+
+---
+
+## 2. Tabelas Disponíveis
+
+| Tabela | Uso no dashboard |
+|--------|------------------|
+| `mart_educacao_uf` | Base de todos os gráficos descritivos por UF |
+| `mart_educacao_municipio` | Filtros por município |
+| `mart_analises_municipio` | Textos narrativos e filtro de cidade |
+| `mart_clusters` | Clusterização e scatter de perfis |
+| `mart_correlacoes` | Heatmap de correlação de Pearson |
+| `mart_alocacao` | Priorização e gaps de infraestrutura |
+| `mart_simulacao_cenarios` | Simulação de cenários de investimento |
+
+---
+
+## 3. Campo Calculado: REGIAO
+
+Crie este campo em **todas** as fontes de dados que contenham a coluna `UF`.
+
+**Como criar:** clique na fonte de dados > **Adicionar campo** > **Campo calculado** > cole o código abaixo > salve com o nome `REGIAO`.
 
 ```sql
 CASE
@@ -37,70 +60,110 @@ CASE
 END
 ```
 
-Nomeie o campo como `REGIAO`. Use este campo sempre que precisar da dimensão região em qualquer gráfico.
-
 ---
 
-## Configuração Geral
+## 4. Tema, Cores e Tipografia
 
-### Dimensões do Relatório
-- **Largura**: 1588 px | **Altura**: 2246 px
-- **Orientação**: Retrato (ideal para PDF)
-- Configurar em: Menu **Arquivo** > **Configurações do relatório** > **Tamanho personalizado**
+### Aplicar tema
 
-### Paleta de Cores
+Menu **Tema** > **Personalizar tema**
+
+### Paleta de cores
+
 ```
-Azul Escuro:      #1B4F72
-Azul Médio:       #2874A6
-Azul Claro:       #5DADE2
-Verde:            #117A65
-Amarelo/Dourado:  #B7950B
-Vermelho:         #943126
-Fundo:            #F8F9F9
-Texto:            #2C3E50
+#1B4F72   Azul Escuro    — títulos, destaque principal
+#2874A6   Azul Médio     — barras, pontos de dispersão
+#5DADE2   Azul Claro     — escala mínima em mapas
+#117A65   Verde          — métricas positivas, laboratório
+#B7950B   Âmbar          — atenção, cluster potencial
+#943126   Vermelho       — crítico, gap, escala máxima
+#F8F9F9   Cinza Claro    — fundo dos painéis
+#2C3E50   Cinza Escuro   — texto corrido
 ```
-Aplicar em: Menu **Tema** > **Personalizar tema**
 
-### Filtros (aplicar em todas as páginas)
-- [ ] Filtro por **Ano** (lista suspensa, seleção única)
-- [ ] Filtro por **UF** (lista suspensa, seleção múltipla, pesquisa habilitada)
-- [ ] Filtro por **Município** (lista suspensa, fonte: `mart_analises_municipio`, campo: `CIDADE`)
-- [ ] Filtro por **Região** (caixa de seleção: Norte, Nordeste, Centro-Oeste, Sudeste, Sul)
+### Tipografia
 
----
-
-## Página 1: Resumo Executivo
-
-### Checklist
-
-- [ ] Título da página:
-  ```
-  Painel de Indicadores Educacionais - MEC/INEP
-  ```
-- [ ] Subtítulo com ano de referência dos dados
+| Elemento | Fonte | Tamanho | Estilo |
+|----------|-------|---------|--------|
+| Título do relatório | Google Sans | 22 pt | Negrito |
+| Título de gráfico | Google Sans | 14 pt | Negrito |
+| Rótulos de eixo | Roboto | 11 pt | Regular |
+| Valores em scorecard | Roboto | 28 pt | Negrito |
+| Texto de legenda | Roboto | 10 pt | Regular |
 
 ---
 
-#### Scorecards — 4 KPIs
+## 5. Dimensões e Filtros Globais
 
-**Tabela BigQuery**: `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+### Tamanho do relatório
 
-| KPI | Campo | Rótulo exibido |
-|-----|-------|----------------|
-| Matrículas | `SUM(TOTAL_MATRICULAS)` | Total de Matrículas |
-| Escolas | `SUM(TOTAL_ESCOLAS)` | Total de Escolas |
-| ENEM | `AVG(NOTA_MEDIA_ENEM)` | Média ENEM (0–1000) |
-| Internet | `AVG(PCT_ESCOLAS_INTERNET)` | % Escolas Conectadas |
+Menu **Arquivo** > **Configurações do relatório** > **Tamanho personalizado**
+
+```
+Largura:  1588 px
+Altura:   2246 px
+```
+
+Orientação: Retrato — ideal para exportação em PDF.
+
+### Filtros (aplicar em todas as 4 páginas)
+
+| Filtro | Tipo | Fonte | Campo |
+|--------|------|-------|-------|
+| Ano | Lista suspensa, seleção única | `mart_educacao_uf` | `ANO` |
+| UF | Lista suspensa, seleção múltipla, pesquisa habilitada | `mart_educacao_uf` | `UF` |
+| Município | Lista suspensa | `mart_analises_municipio` | `CIDADE` |
+| Região | Caixa de seleção | `mart_educacao_uf` | `REGIAO` (campo calculado) |
+
+---
+
+## 6. Página 1 — Resumo Executivo
+
+**Título da página:**
+```
+Painel de Indicadores Educacionais - MEC/INEP
+```
+
+**Subtítulo sugerido:**
+```
+Dados: Censo Escolar e ENEM 2023 — INEP/MEC
+```
+
+---
+
+### 6.1 Scorecards — 4 KPIs
+
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
+
+Crie 4 scorecards individuais com os campos abaixo:
+
+| Scorecard | Campo BigQuery | Título do scorecard |
+|-----------|----------------|---------------------|
+| Matrículas | `SUM(TOTAL_MATRICULAS)` | `Total de Matrículas` |
+| Escolas | `SUM(TOTAL_ESCOLAS)` | `Total de Escolas` |
+| ENEM | `AVG(NOTA_MEDIA_ENEM)` | `Média ENEM (0–1000)` |
+| Internet | `AVG(PCT_ESCOLAS_INTERNET)` | `% Escolas Conectadas` |
+
+**Estilo dos scorecards:**
+- Cor do valor: `#1B4F72`
+- Cor do rótulo: `#2C3E50`
+- Casas decimais: 0 para contagens, 1 para percentuais e notas
 
 ![Scorecards KPIs](images/descritiva_scorecard.png)
 
 ---
 
-#### Mapa geográfico — Matrículas por UF
+### 6.2 Mapa Geográfico — Matrículas por UF
 
-**Tabela BigQuery**: `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
 
-**Título do gráfico:**
+**Título:**
 ```
 Distribuição de Matrículas por Estado — 2023
 ```
@@ -109,58 +172,72 @@ Distribuição de Matrículas por Estado — 2023
 |-------------|-------|
 | Tipo | Mapa geográfico |
 | Dimensão | `UF` |
-| Métrica | `SUM(TOTAL_MATRICULAS)` — rótulo: *Total de Matrículas* |
-| Escala de cor | `#5DADE2` (mínimo) → `#1B4F72` (máximo) |
+| Rótulo da dimensão | `Estado (UF)` |
+| Métrica | `SUM(TOTAL_MATRICULAS)` |
+| Rótulo da métrica | `Total de Matrículas` |
+| Cor mínima (escala) | `#5DADE2` |
+| Cor máxima (escala) | `#1B4F72` |
+| Região do mapa | Brasil |
 
 ![Mapa Matrículas por UF](images/descritiva_mapa_matriculas.png)
 
 ---
 
-#### Tabela resumo — Top UFs
+### 6.3 Tabela Resumo — Top UFs por ENEM
 
-**Tabela BigQuery**: `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
 
-**Título do gráfico:**
+**Título:**
 ```
 Ranking de Estados por Desempenho no ENEM — 2023
 ```
 
 | Configuração | Valor |
 |-------------|-------|
-| Top 5 melhores | Ordenar por `NOTA_MEDIA_ENEM` decrescente |
-| Top 5 críticos | Ordenar por `NOTA_MEDIA_ENEM` crescente |
-| Rodapé | Dados: INEP/MEC - Censo Escolar e ENEM 2023 |
+| Tipo | Tabela |
+| Dimensão | `UF` — rótulo: `Estado (UF)` |
+| Métrica principal | `AVG(NOTA_MEDIA_ENEM)` — rótulo: `Desempenho Médio ENEM` |
+| Ordenação | `NOTA_MEDIA_ENEM` decrescente |
+| Linhas por página | 27 (todas as UFs) |
+| Rodapé | `Dados: INEP/MEC — Censo Escolar e ENEM 2023` |
 
 ---
 
-## Página 2: Análise Descritiva
+## 7. Página 2 — Análise Descritiva
 
-### Checklist
-
-- [ ] Título da página:
-  ```
-  Análise Descritiva por Unidade Federativa
-  ```
+**Título da página:**
+```
+Análise Descritiva por Unidade Federativa
+```
 
 ---
 
-#### Gráfico 1 — Matrículas por Região
+### 7.1 Matrículas por Região
 
-**Tabela BigQuery**: `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
 
-**Título do gráfico:**
+**Título:**
 ```
 Matrículas por Região — Brasil 2023
 ```
 
 | Configuração | Valor |
 |-------------|-------|
-| Tipo | Barras horizontal |
-| Dimensão | `REGIAO` (campo calculado — veja seção Campo Calculado acima) |
-| Métrica | `SUM(TOTAL_MATRICULAS)` — rótulo: *Total de Matrículas* |
-| Ordenação | Decrescente |
+| Tipo | Gráfico de barras (horizontal) |
+| Dimensão | `REGIAO` (campo calculado) |
+| Rótulo da dimensão | `Região` |
+| Métrica | `SUM(TOTAL_MATRICULAS)` |
+| Rótulo da métrica | `Total de Matrículas` |
+| Ordenação | Decrescente por métrica |
+| Cores | Uma cor por região (veja tabela abaixo) |
 
-Cores por região (uma cor por barra):
+**Cores por região:**
 
 | Região | Cor (hex) |
 |--------|-----------|
@@ -174,97 +251,114 @@ Cores por região (uma cor por barra):
 
 ---
 
-#### Gráfico 2 — Infraestrutura por UF
+### 7.2 Infraestrutura Digital e Científica por UF
 
-**Tabela BigQuery**: `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
 
-**Título do gráfico:**
+**Título:**
 ```
 Infraestrutura Digital e Científica por Estado — 2023
 ```
 
 | Configuração | Valor |
 |-------------|-------|
-| Tipo | Barras agrupadas |
-| Dimensão | `UF` — rótulo: *Estado (UF)* |
+| Tipo | Gráfico de barras agrupadas |
+| Dimensão | `UF` |
+| Rótulo da dimensão | `Estado (UF)` |
+| Ordenação | `AVG(PCT_ESCOLAS_INTERNET)` decrescente |
 
-| Métrica | Rótulo exibido | Cor (hex) |
-|---------|----------------|-----------|
-| `AVG(PCT_ESCOLAS_INTERNET)` | % Escolas com Internet | `#2874A6` |
-| `AVG(PCT_ESCOLAS_LABORATORIO)` | % Escolas com Laboratório | `#117A65` |
+**Métricas:**
+
+| Campo BigQuery | Rótulo exibido | Cor |
+|----------------|----------------|-----|
+| `AVG(PCT_ESCOLAS_INTERNET)` | `% Escolas com Internet` | `#2874A6` |
+| `AVG(PCT_ESCOLAS_LABORATORIO)` | `% Escolas com Laboratório` | `#117A65` |
 
 ![Infraestrutura por UF](images/descritiva_infraestrutura.png)
 
 ---
 
-#### Gráfico 3 — Distribuição de Docentes
+### 7.3 Distribuição do Corpo Docente por Estado
 
-**Tabela BigQuery**: `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
 
-**Título do gráfico:**
+**Título:**
 ```
 Distribuição do Corpo Docente por Estado — 2023
 ```
 
 | Configuração | Valor |
 |-------------|-------|
-| Tipo | Barras horizontal |
-| Dimensão | `UF` — rótulo: *Estado (UF)* |
-| Métrica | `SUM(TOTAL_DOCENTES)` — rótulo: *Total de Docentes* |
+| Tipo | Gráfico de barras (horizontal) |
+| Dimensão | `UF` |
+| Rótulo da dimensão | `Estado (UF)` |
+| Métrica | `SUM(TOTAL_DOCENTES)` |
+| Rótulo da métrica | `Total de Docentes` |
 | Dimensão de cor | `REGIAO` (campo calculado) |
+| Ordenação | Decrescente por métrica |
 
-Cores por região (use o campo calculado `REGIAO` como dimensão de cor):
-
-| Região | Cor (hex) |
-|--------|-----------|
-| Norte | `#943126` |
-| Nordeste | `#B7950B` |
-| Centro-Oeste | `#117A65` |
-| Sudeste | `#1B4F72` |
-| Sul | `#5DADE2` |
+**Cores por região** (as mesmas do gráfico 7.1 acima)
 
 ![Distribuição de Docentes](images/descritiva_docentes.png)
 
 ---
 
-#### Gráfico 4 — Notas ENEM por UF
+### 7.4 Desempenho no ENEM por Estado
 
-**Tabela BigQuery**: `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
 
-**Título do gráfico:**
+**Título:**
 ```
 Desempenho no ENEM por Estado — 2023
 ```
 
 | Configuração | Valor |
 |-------------|-------|
-| Tipo | Barras vertical |
-| Dimensão | `UF` — rótulo: *Estado (UF)* |
-| Métrica | `AVG(NOTA_MEDIA_ENEM)` — rótulo: *Desempenho Médio ENEM (0–1000)* |
-| Linha de referência 1 | Média nacional — `AVG(NOTA_MEDIA_ENEM)` de todo o Brasil |
-| Linha de referência 2 | Meta PNE: 550 pontos |
+| Tipo | Gráfico de barras (vertical) |
+| Dimensão | `UF` |
+| Rótulo da dimensão | `Estado (UF)` |
+| Métrica | `AVG(NOTA_MEDIA_ENEM)` |
+| Rótulo da métrica | `Desempenho Médio ENEM (0–1000)` |
 | Cor das barras | `#2874A6` |
+| Ordenação | Decrescente por métrica |
+
+**Linhas de referência:**
+
+| Linha | Tipo | Valor | Cor | Rótulo |
+|-------|------|-------|-----|--------|
+| Média nacional | Constante calculada | `AVG(NOTA_MEDIA_ENEM)` de todo o Brasil | `#2C3E50` | `Média BR` |
+| Meta PNE | Constante fixa | `550` | `#943126` | `Meta PNE` |
 
 ![Notas ENEM por UF](images/descritiva_notas_enem.png)
 
 ---
 
-## Página 3: Análise Preditiva
+## 8. Página 3 — Análise Preditiva
 
-### Checklist
-
-- [ ] Título da página:
-  ```
-  Análise Preditiva — Clusters e Correlações
-  ```
+**Título da página:**
+```
+Análise Preditiva — Clusters e Correlações
+```
 
 ---
 
-#### Gráfico 1 — Clusters de UFs (Scatter)
+### 8.1 Agrupamento de Estados por Perfil (Scatter)
 
-**Tabela BigQuery**: `provas-de-conceitos.mec_educacao_dev.mart_clusters`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_clusters
+```
 
-**Título do gráfico:**
+**Título:**
 ```
 Agrupamento de Estados por Perfil Educacional — 2023
 ```
@@ -272,15 +366,18 @@ Agrupamento de Estados por Perfil Educacional — 2023
 | Configuração | Valor |
 |-------------|-------|
 | Tipo | Dispersão (Scatter) |
-| Eixo X | `Z_SCORE_NOTA` — rótulo: *Componente Principal 1 (Desempenho)* |
-| Eixo Y | `Z_SCORE_RENDA` — rótulo: *Componente Principal 2 (Infraestrutura)* |
-| Dimensão de cor | `CLUSTER_ID` — rótulo: *Cluster* |
-| Rótulos de ponto | `UF` |
+| Eixo X | `Z_SCORE_NOTA` |
+| Rótulo eixo X | `Componente Principal 1 (Desempenho)` |
+| Eixo Y | `Z_SCORE_RENDA` |
+| Rótulo eixo Y | `Componente Principal 2 (Infraestrutura)` |
+| Dimensão de cor | `CLUSTER_ID` — rótulo: `Cluster` |
+| Rótulos dos pontos | `UF` |
+| Tamanho dos pontos | Fixo (sem métrica de tamanho) |
 
-Cores por cluster:
+**Cores por cluster:**
 
-| Cluster | Descrição | Cor (hex) |
-|---------|-----------|-----------|
+| Cluster | Perfil | Cor |
+|---------|--------|-----|
 | 1 | Alto Desempenho | `#1B4F72` |
 | 2 | Médio | `#2874A6` |
 | 3 | Potencial | `#B7950B` |
@@ -290,11 +387,14 @@ Cores por cluster:
 
 ---
 
-#### Gráfico 2 — Correlação Nota x Infraestrutura (Scatter com tendência)
+### 8.2 Conectividade vs. Desempenho (Scatter com tendência)
 
-**Tabela BigQuery**: `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
 
-**Título do gráfico:**
+**Título:**
 ```
 Conectividade Escolar vs. Desempenho no ENEM — 2023
 ```
@@ -302,141 +402,162 @@ Conectividade Escolar vs. Desempenho no ENEM — 2023
 | Configuração | Valor |
 |-------------|-------|
 | Tipo | Dispersão com linha de tendência |
-| Eixo X | `PCT_ESCOLAS_INTERNET` — rótulo: *% Escolas Conectadas à Internet* |
-| Eixo Y | `NOTA_MEDIA_ENEM` — rótulo: *Desempenho Médio ENEM (0–1000)* |
-| Rótulos de ponto | `UF` |
+| Eixo X | `PCT_ESCOLAS_INTERNET` |
+| Rótulo eixo X | `% Escolas Conectadas à Internet` |
+| Eixo Y | `NOTA_MEDIA_ENEM` |
+| Rótulo eixo Y | `Desempenho Médio ENEM (0–1000)` |
+| Rótulos dos pontos | `UF` |
 | Cor dos pontos | `#2874A6` |
-| Linha de tendência | Regressão linear — habilitar em Estilo > Série |
+| Linha de tendência | Regressão linear — habilitar em **Estilo** > **Série** > **Linha de tendência** |
+| Cor da linha de tendência | `#943126` |
 
 ![Regressão Internet vs Nota](images/regressao_corporativo.png)
 
 ---
 
-#### Gráfico 3 — Matriz de Correlação (Heatmap)
+### 8.3 Matriz de Correlação (Heatmap)
 
-**Tabela BigQuery**: `provas-de-conceitos.mec_educacao_dev.mart_correlacoes`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_correlacoes
+```
 
-**Título do gráfico:**
+**Título:**
 ```
 Matriz de Correlação entre Indicadores Educacionais
 ```
 
 | Configuração | Valor |
 |-------------|-------|
-| Tipo | Tabela com formatação condicional (heatmap) |
-| Dimensão | `PAR_VARIAVEIS` — rótulo: *Par de Variáveis* |
-| Métrica | `CORRELACAO` — rótulo: *Correlação de Pearson* |
+| Tipo | Tabela com formatação condicional |
+| Dimensão | `PAR_VARIAVEIS` — rótulo: `Par de Variáveis` |
+| Métrica | `CORRELACAO` — rótulo: `Correlação de Pearson` |
 
-Escala de cor condicional:
+**Escala de cor condicional (no campo `CORRELACAO`):**
 
-| Valor | Cor (hex) | Significado |
-|-------|-----------|-------------|
-| -1.0 | `#943126` | Correlação negativa forte |
-| 0.0 | `#F8F9F9` | Sem correlação |
-| +1.0 | `#1B4F72` | Correlação positiva forte |
+| Valor | Cor | Significado |
+|-------|-----|-------------|
+| `-1.0` | `#943126` | Correlação negativa forte |
+| `0.0` | `#F8F9F9` | Sem correlação |
+| `+1.0` | `#1B4F72` | Correlação positiva forte |
 
 ![Matriz de Correlação](images/preditiva_heatmap_correlacao.png)
 
 ---
 
-#### Tabela — Descrição dos Clusters
+### 8.4 Perfis de Clusters — Tabela Descritiva
 
-**Tabela BigQuery**: `provas-de-conceitos.mec_educacao_dev.mart_clusters`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_clusters
+```
 
-**Título do gráfico:**
+**Título:**
 ```
 Perfis de Clusters Educacionais — Resumo por Grupo
 ```
 
-| Campo | Rótulo exibido |
-|-------|----------------|
-| `CLUSTER_ID` | Cluster |
-| `DESCRICAO_CLUSTER` | Perfil do Grupo |
-| `COUNT(UF)` | Nº de Estados |
-| `AVG(NOTA_MEDIA_ENEM)` | Média ENEM (0–1000) |
-| `PRIORIDADE_INVESTIMENTO` | Prioridade |
+| Campo BigQuery | Rótulo exibido |
+|----------------|----------------|
+| `CLUSTER_ID` | `Cluster` |
+| `DESCRICAO_CLUSTER` | `Perfil do Grupo` |
+| `COUNT(UF)` | `Nº de Estados` |
+| `AVG(NOTA_MEDIA_ENEM)` | `Média ENEM (0–1000)` |
+| `PRIORIDADE_INVESTIMENTO` | `Prioridade` |
 
-Formatação condicional em `PRIORIDADE_INVESTIMENTO`:
+**Formatação condicional no campo `PRIORIDADE_INVESTIMENTO`:**
 
-| Valor | Cor (hex) |
-|-------|-----------|
-| ALTA | `#943126` |
-| MEDIA | `#B7950B` |
-| BAIXA | `#117A65` |
-| MONITORAMENTO | `#2874A6` |
+| Valor | Cor |
+|-------|-----|
+| `ALTA` | `#943126` |
+| `MEDIA` | `#B7950B` |
+| `BAIXA` | `#117A65` |
+| `MONITORAMENTO` | `#2874A6` |
 
 ![Tabela de Clusters](images/preditiva_tabela_clusters.png)
 
 ---
 
-## Página 4: Análise Prescritiva
+## 9. Página 4 — Análise Prescritiva
 
-### Checklist
-
-- [ ] Título da página:
-  ```
-  Análise Prescritiva — Priorização de Investimentos
-  ```
+**Título da página:**
+```
+Análise Prescritiva — Priorização de Investimentos
+```
 
 ---
 
-#### Gráfico 1 — Priorização de Investimentos por UF
+### 9.1 Investimento Necessário por Estado
 
-**Tabela BigQuery**: `provas-de-conceitos.mec_educacao_dev.mart_alocacao`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_alocacao
+```
 
-**Título do gráfico:**
+**Título:**
 ```
 Investimento Necessário por Estado — Estimativa 2023
 ```
 
 | Configuração | Valor |
 |-------------|-------|
-| Tipo | Barras horizontal |
-| Dimensão | `UF` — rótulo: *Estado (UF)* |
-| Métrica | `INVESTIMENTO_TOTAL_ESTIMADO_BRL` — rótulo: *Investimento Estimado (R$)* |
-| Dimensão de cor | `STATUS_DESEMPENHO` — rótulo: *Status de Desempenho* |
+| Tipo | Gráfico de barras (horizontal) |
+| Dimensão | `UF` — rótulo: `Estado (UF)` |
+| Métrica | `INVESTIMENTO_TOTAL_ESTIMADO_BRL` |
+| Rótulo da métrica | `Investimento Estimado (R$)` |
+| Dimensão de cor | `STATUS_DESEMPENHO` — rótulo: `Status de Desempenho` |
+| Ordenação | `ORDEM_PRIORIDADE` crescente |
 
-Cores por status:
+**Cores por status:**
 
-| Status | Cor (hex) |
-|--------|-----------|
-| CRITICO | `#943126` |
-| ATENCAO | `#B7950B` |
-| REGULAR | `#5DADE2` |
-| ADEQUADO | `#117A65` |
+| Valor no campo | Cor | Significado |
+|----------------|-----|-------------|
+| `CRITICO` | `#943126` | Intervenção urgente |
+| `ATENCAO` | `#B7950B` | Monitoramento intensivo |
+| `REGULAR` | `#5DADE2` | Manutenção |
+| `ADEQUADO` | `#117A65` | Referência |
 
 ![Priorização de Investimentos](images/investimentos_corporativo.png)
 
 ---
 
-#### Gráfico 2 — Simulação de Cenários
+### 9.2 Impacto por Cenário de Investimento
 
-**Tabela BigQuery**: `provas-de-conceitos.mec_educacao_dev.mart_simulacao_cenarios`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_simulacao_cenarios
+```
 
-**Título do gráfico:**
+**Título:**
 ```
 Impacto Projetado por Cenário de Investimento
 ```
 
 | Configuração | Valor |
 |-------------|-------|
-| Tipo | Barras vertical agrupadas |
-| Dimensão | `CENARIO_NOME` — rótulo: *Cenário de Investimento* |
+| Tipo | Gráfico de barras agrupadas (vertical) |
+| Dimensão | `CENARIO_NOME` — rótulo: `Cenário de Investimento` |
+| Ordenação | `AUMENTO_PERCENTUAL` crescente |
 
-| Métrica | Rótulo exibido | Cor (hex) |
-|---------|----------------|-----------|
-| `IMPACTO_NOTA_ENEM_PONTOS` | Ganho Estimado no ENEM (pontos) | `#1B4F72` |
-| `REDUCAO_ABANDONO_PCT` | Redução Estimada de Abandono (%) | `#117A65` |
+**Métricas:**
+
+| Campo BigQuery | Rótulo exibido | Cor |
+|----------------|----------------|-----|
+| `IMPACTO_NOTA_ENEM_PONTOS` | `Ganho Estimado no ENEM (pontos)` | `#1B4F72` |
+| `REDUCAO_ABANDONO_PCT` | `Redução Estimada de Abandono (%)` | `#117A65` |
 
 ![Simulação de Cenários](images/prescritiva_cenarios.png)
 
 ---
 
-#### Mapa de Calor — Investimento por UF
+### 9.3 Mapa de Necessidade de Investimento
 
-**Tabela BigQuery**: `provas-de-conceitos.mec_educacao_dev.mart_alocacao`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_alocacao
+```
 
-**Título do gráfico:**
+**Título:**
 ```
 Mapa de Necessidade de Investimento por Estado — 2023
 ```
@@ -444,98 +565,155 @@ Mapa de Necessidade de Investimento por Estado — 2023
 | Configuração | Valor |
 |-------------|-------|
 | Tipo | Mapa geográfico |
-| Dimensão | `UF` — rótulo: *Estado (UF)* |
-| Métrica | `INVESTIMENTO_TOTAL_ESTIMADO_BRL` — rótulo: *Investimento Estimado (R$)* |
-| Escala de cor | `#5DADE2` (mínimo) → `#943126` (máximo — maior necessidade) |
+| Dimensão | `UF` — rótulo: `Estado (UF)` |
+| Métrica | `INVESTIMENTO_TOTAL_ESTIMADO_BRL` |
+| Rótulo da métrica | `Investimento Estimado (R$)` |
+| Cor mínima (escala) | `#5DADE2` |
+| Cor máxima (escala) | `#943126` |
+| Região do mapa | Brasil |
 
 ![Mapa de Investimento](images/prescritiva_mapa_investimento.png)
 
 ---
 
-#### Tabela de Priorização
+### 9.4 Ranking de Prioridade de Investimento
 
-**Tabelas BigQuery**: `provas-de-conceitos.mec_educacao_dev.mart_alocacao` + `provas-de-conceitos.mec_educacao_dev.mart_clusters`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_alocacao
+```
 
-**Título do gráfico:**
+**Fonte adicional (JOIN):**
+```
+provas-de-conceitos.mec_educacao_dev.mart_clusters
+```
+
+**Título:**
 ```
 Ranking de Prioridade de Investimento por Estado — 2023
 ```
 
-| Campo | Rótulo exibido |
-|-------|----------------|
-| `UF` | Estado |
-| `STATUS_DESEMPENHO` | Status |
-| `GAP_INTERNET_PCT` | Gap Internet (p.p.) |
-| `GAP_LABORATORIO_PCT` | Gap Laboratório (p.p.) |
-| `INVESTIMENTO_TOTAL_ESTIMADO_BRL` | Investimento Estimado (R$) |
-| `DESCRICAO_CLUSTER` | Perfil do Cluster |
+| Campo BigQuery | Rótulo exibido |
+|----------------|----------------|
+| `UF` | `Estado` |
+| `STATUS_DESEMPENHO` | `Status` |
+| `GAP_INTERNET_PCT` | `Gap Internet (p.p.)` |
+| `GAP_LABORATORIO_PCT` | `Gap Laboratório (p.p.)` |
+| `INVESTIMENTO_TOTAL_ESTIMADO_BRL` | `Investimento Estimado (R$)` |
+| `DESCRICAO_CLUSTER` | `Perfil do Cluster` |
 
-- Ordenação: `ORDEM_PRIORIDADE` (crescente)
-- Formatação condicional em `STATUS_DESEMPENHO` (mesmas cores do Gráfico 1 desta página)
+- Ordenação: `ORDEM_PRIORIDADE` crescente
+- Formatação condicional em `STATUS_DESEMPENHO` — mesmas cores do gráfico 9.1
 
 ![Tabela de Priorização](images/prescritiva_tabela_priorizacao.png)
 
 ---
 
-#### Gráfico — Gap de Infraestrutura por UF
+### 9.5 Déficit de Infraestrutura por Estado
 
-**Tabela BigQuery**: `provas-de-conceitos.mec_educacao_dev.mart_alocacao`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_alocacao
+```
 
-**Título do gráfico:**
+**Título:**
 ```
 Déficit de Infraestrutura por Estado — 2023
 ```
 
 | Configuração | Valor |
 |-------------|-------|
-| Tipo | Barras agrupadas horizontal |
-| Dimensão | `UF` — rótulo: *Estado (UF)* |
-| Ordenação | `ORDEM_PRIORIDADE` (crescente) |
+| Tipo | Gráfico de barras agrupadas (horizontal) |
+| Dimensão | `UF` — rótulo: `Estado (UF)` |
+| Ordenação | `ORDEM_PRIORIDADE` crescente |
 
-| Métrica | Rótulo exibido | Cor (hex) |
-|---------|----------------|-----------|
-| `GAP_INTERNET_PCT` | Gap Internet (pontos percentuais) | `#943126` |
-| `GAP_LABORATORIO_PCT` | Gap Laboratório (pontos percentuais) | `#B7950B` |
+**Métricas:**
+
+| Campo BigQuery | Rótulo exibido | Cor |
+|----------------|----------------|-----|
+| `GAP_INTERNET_PCT` | `Gap Internet (pontos percentuais)` | `#943126` |
+| `GAP_LABORATORIO_PCT` | `Gap Laboratório (pontos percentuais)` | `#B7950B` |
 
 ![Gap de Infraestrutura](images/prescritiva_bullet_gap.png)
 
 ---
 
-## Checklist Final
+## 10. Checklist Final
 
-- [ ] Conexão BigQuery funcionando
-- [ ] Campo calculado `REGIAO` criado em todas as fontes necessárias
-- [ ] 4 páginas criadas (Resumo, Descritiva, Preditiva, Prescritiva)
-- [ ] Filtros aplicados em todas as páginas
-- [ ] Cores corporativas configuradas
-- [ ] Títulos dos gráficos copiados e colados exatamente como indicado neste guia
+### Estrutura
+- [ ] 4 páginas criadas com os títulos exatos desta seção
+- [ ] Subtítulo com ano de referência em cada página
+- [ ] Filtros globais (Ano, UF, Município, Região) aplicados em todas as páginas
+
+### Dados
+- [ ] Conexão BigQuery funcionando para todas as 7 tabelas
+- [ ] Campo calculado `REGIAO` criado em todas as fontes que usam `UF`
+- [ ] Nenhuma tabela retornando erro de permissão
+
+### Gráficos
+- [ ] Títulos copiados exatamente como indicado em cada seção
 - [ ] Rótulos de eixos e métricas em português legível
-- [ ] Fonte de dados citada no rodapé de cada página
-- [ ] Teste de exportação PDF realizado
+- [ ] Cores corporativas aplicadas por série/dimensão conforme tabelas acima
+- [ ] Linha de tendência habilitada no gráfico de dispersão (8.2)
+- [ ] Linhas de referência (média BR e meta PNE) no gráfico 7.4
+- [ ] Formatação condicional configurada nas tabelas de cluster e priorização
+
+### Tema
+- [ ] Paleta de cores aplicada no tema global
+- [ ] Tipografia configurada (Google Sans para títulos, Roboto para rótulos)
+- [ ] Dimensões do relatório: 1588 × 2246 px
+
+### Exportação
+- [ ] Teste de exportação PDF realizado (Menu **Arquivo** > **Fazer download** > **PDF**)
+- [ ] Rodapé com fonte de dados citada em cada página
 
 ---
 
-## Queries Úteis
+## 11. Queries de Verificação
+
+Use estas queries no BigQuery para validar os dados antes de montar o dashboard.
+
+### Verificar todas as UFs presentes
+
+```sql
+SELECT ANO, COUNT(DISTINCT UF) AS total_ufs
+FROM `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+GROUP BY ANO
+ORDER BY ANO DESC
+```
 
 ### Top 10 UFs por Nota ENEM
+
 ```sql
-SELECT UF, ROUND(NOTA_MEDIA_ENEM, 2) AS NOTA
-FROM mart_educacao_uf
+SELECT UF, ROUND(NOTA_MEDIA_ENEM, 1) AS nota
+FROM `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
 WHERE ANO = 2023
 ORDER BY NOTA_MEDIA_ENEM DESC
 LIMIT 10
 ```
 
-### Municípios Prioritários
+### Estados abaixo da meta PNE (550 pontos)
+
 ```sql
-SELECT CIDADE, UF, PRIORIDADE_INVESTIMENTO, TEXTO_ANALISE
-FROM mart_analises_municipio
+SELECT UF, ROUND(NOTA_MEDIA_ENEM, 1) AS nota, ROUND(550 - NOTA_MEDIA_ENEM, 1) AS gap_meta
+FROM `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+WHERE ANO = 2023
+  AND NOTA_MEDIA_ENEM < 550
+ORDER BY NOTA_MEDIA_ENEM ASC
+```
+
+### Municípios com prioridade ALTA
+
+```sql
+SELECT CIDADE, UF, PRIORIDADE_INVESTIMENTO, ROUND(NOTA_MEDIA_ENEM, 1) AS nota
+FROM `provas-de-conceitos.mec_educacao_dev.mart_analises_municipio`
 WHERE PRIORIDADE_INVESTIMENTO = 'ALTA'
-ORDER BY NOTA_MEDIA_ENEM
+ORDER BY NOTA_MEDIA_ENEM ASC
 LIMIT 50
 ```
 
-### Comparativo Regional
+### Comparativo regional completo
+
 ```sql
 SELECT
     CASE
@@ -545,11 +723,24 @@ SELECT
         WHEN UF IN ('ES','MG','RJ','SP') THEN 'Sudeste'
         WHEN UF IN ('PR','RS','SC') THEN 'Sul'
     END AS REGIAO,
-    COUNT(DISTINCT UF) AS UFS,
-    SUM(TOTAL_MATRICULAS) AS MATRICULAS,
-    AVG(NOTA_MEDIA_ENEM) AS MEDIA_ENEM,
-    AVG(PCT_ESCOLAS_INTERNET) AS PCT_INTERNET
-FROM mart_educacao_uf
-GROUP BY 1
-ORDER BY 4 DESC
+    COUNT(DISTINCT UF) AS total_ufs,
+    SUM(TOTAL_MATRICULAS) AS matriculas,
+    ROUND(AVG(NOTA_MEDIA_ENEM), 1) AS media_enem,
+    ROUND(AVG(PCT_ESCOLAS_INTERNET), 1) AS pct_internet
+FROM `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+WHERE ANO = 2023
+GROUP BY REGIAO
+ORDER BY media_enem DESC
+```
+
+### Validar clusters gerados
+
+```sql
+SELECT CLUSTER_ID, DESCRICAO_CLUSTER, COUNT(*) AS total_ufs,
+    ROUND(AVG(NOTA_MEDIA_ENEM), 1) AS media_nota,
+    ROUND(AVG(PCT_ESCOLAS_INTERNET), 1) AS media_internet
+FROM `provas-de-conceitos.mec_educacao_dev.mart_clusters`
+WHERE ANO = 2023
+GROUP BY CLUSTER_ID, DESCRICAO_CLUSTER
+ORDER BY CLUSTER_ID
 ```

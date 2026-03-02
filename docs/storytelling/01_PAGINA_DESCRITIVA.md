@@ -16,7 +16,24 @@ Apresentar uma visão geral da situação educacional no Brasil, permitindo comp
 
 KPIs principais do painel: total de matrículas, total de escolas, média ENEM e percentual de escolas com internet.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
+
+**Título de cada scorecard** (um por KPI):
+```
+Total de Matrículas
+```
+```
+Total de Escolas
+```
+```
+Média ENEM (0–1000)
+```
+```
+% Escolas Conectadas
+```
 
 ```sql
 SELECT
@@ -27,8 +44,6 @@ SELECT
 FROM `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
 WHERE ANO = 2023
 ```
-
-**Rótulos sugeridos nos scorecards:**
 
 | Campo | Rótulo exibido |
 |-------|----------------|
@@ -45,9 +60,17 @@ WHERE ANO = 2023
 
 ### 2. Distribuição de Matrículas por UF
 
-Visualização da concentração de alunos por estado, com cores por região.
+Visualização da concentração de alunos por estado, com intensidade de cor proporcional ao volume.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
+
+**Título:**
+```
+Distribuição de Matrículas por Estado — 2023
+```
 
 ```sql
 SELECT UF, SUM(TOTAL_MATRICULAS) AS MATRICULAS
@@ -56,13 +79,11 @@ WHERE ANO = 2023
 GROUP BY UF
 ```
 
-**Rótulos sugeridos:**
-
 | Elemento | Rótulo exibido |
 |----------|----------------|
-| Dimensão (eixo) | Estado (UF) |
-| Métrica (eixo) | Total de Matrículas |
-| Escala de cor | Intensidade de Matrículas |
+| Dimensão | Estado (UF) |
+| Métrica | Total de Matrículas |
+| Escala de cor | `#5DADE2` (mínimo) → `#1B4F72` (máximo) |
 
 **Narrativa:** SP, MG e BA concentram juntos mais de 40% das matrículas do país. Essa concentração reflete tanto o peso demográfico do Sudeste quanto a extensão territorial do Nordeste. Estados menores do Norte, apesar de populações reduzidas, apresentam desafios logísticos únicos que o volume absoluto de matrículas tende a subestimar.
 
@@ -74,7 +95,15 @@ GROUP BY UF
 
 Comparativo regional com percentuais de concentração de alunos.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
+
+**Título:**
+```
+Matrículas por Região — Brasil 2023
+```
 
 ```sql
 SELECT
@@ -91,13 +120,10 @@ WHERE ANO = 2023
 GROUP BY 1
 ```
 
-**Rótulos sugeridos:**
-
 | Elemento | Rótulo exibido |
 |----------|----------------|
 | Dimensão | Região |
 | Métrica | Total de Matrículas |
-| Título do gráfico | Matrículas por Região — Brasil 2023 |
 
 Cores por região:
 
@@ -119,7 +145,15 @@ Cores por região:
 
 Comparativo de internet e laboratório entre estados.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
+
+**Título:**
+```
+Infraestrutura Digital e Científica por Estado — 2023
+```
 
 ```sql
 SELECT UF, PCT_ESCOLAS_INTERNET, PCT_ESCOLAS_LABORATORIO
@@ -128,19 +162,10 @@ WHERE ANO = 2023
 ORDER BY PCT_ESCOLAS_INTERNET DESC
 ```
 
-**Rótulos sugeridos:**
-
-| Elemento | Rótulo exibido |
-|----------|----------------|
-| Dimensão | Estado (UF) |
-| Métrica 1 | % Escolas com Internet |
-| Métrica 2 | % Escolas com Laboratório |
-| Título | Infraestrutura Digital e Científica por UF — 2023 |
-
-| Métrica | Cor (hex) |
-|---------|-----------|
-| % Escolas com Internet | `#2874A6` |
-| % Escolas com Laboratório | `#117A65` |
+| Métrica | Rótulo exibido | Cor (hex) |
+|---------|----------------|-----------|
+| `PCT_ESCOLAS_INTERNET` | % Escolas com Internet | `#2874A6` |
+| `PCT_ESCOLAS_LABORATORIO` | % Escolas com Laboratório | `#117A65` |
 
 **Narrativa:** UFs com menos de 60% de conectividade — especialmente no Norte — concentram os maiores gaps de infraestrutura digital. O gap de laboratório é igualmente crítico: sem equipamentos físicos, o acesso à internet isolado não é suficiente para garantir educação de qualidade em ciências. Estados como MA, PA e AM requerem intervenção simultânea nas duas dimensões.
 
@@ -152,7 +177,15 @@ ORDER BY PCT_ESCOLAS_INTERNET DESC
 
 Total de docentes por estado com cores por região.
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
+
+**Título:**
+```
+Distribuição do Corpo Docente por Estado — 2023
+```
 
 ```sql
 SELECT UF, SUM(TOTAL_DOCENTES) AS DOCENTES
@@ -162,16 +195,13 @@ GROUP BY UF
 ORDER BY DOCENTES DESC
 ```
 
-**Rótulos sugeridos:**
-
 | Elemento | Rótulo exibido |
 |----------|----------------|
 | Dimensão | Estado (UF) |
 | Métrica | Total de Docentes |
-| Dimensão de cor | Região |
-| Título | Distribuição do Corpo Docente por Estado — 2023 |
+| Dimensão de cor | Região (campo calculado `REGIAO`) |
 
-Cores por região (use o campo calculado `REGIAO` como dimensão de cor):
+Cores por região:
 
 | Região | Cor (hex) |
 |--------|-----------|
@@ -191,7 +221,15 @@ Cores por região (use o campo calculado `REGIAO` como dimensão de cor):
 
 Ranking de desempenho com linhas de referência para média nacional e meta PNE (550 pontos).
 
-**Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+**Fonte:**
+```
+provas-de-conceitos.mec_educacao_dev.mart_educacao_uf
+```
+
+**Título:**
+```
+Desempenho no ENEM por Estado — 2023
+```
 
 ```sql
 SELECT UF, NOTA_MEDIA_ENEM
@@ -200,16 +238,13 @@ WHERE ANO = 2023
 ORDER BY NOTA_MEDIA_ENEM DESC
 ```
 
-**Rótulos sugeridos:**
-
 | Elemento | Rótulo exibido |
 |----------|----------------|
 | Dimensão | Estado (UF) |
 | Métrica | Desempenho Médio ENEM (0–1000) |
+| Cor das barras | `#2874A6` |
 | Linha de referência 1 | Média Nacional |
 | Linha de referência 2 | Meta PNE (550 pts) |
-| Título | Desempenho no ENEM por Estado — 2023 |
-| Cor das barras | `#2874A6` |
 
 **Narrativa:** Apenas um punhado de estados atingem ou superam a meta do PNE de 550 pontos — DF, SC e SP lideram consistentemente. O padrão geográfico é claro: estados do Norte e Nordeste concentram os menores desempenhos, com diferença de até 80 pontos em relação aos líderes nacionais. Esse gap representa anos de defasagem curricular que exigem intervenção estrutural, não apenas programas de reforço.
 
