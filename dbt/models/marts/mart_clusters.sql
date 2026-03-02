@@ -60,7 +60,7 @@ SELECT
     CASE c.CLUSTER_ID
         WHEN 1 THEN 'Alto Desempenho / Alta Renda'
         WHEN 2 THEN 'Desempenho Medio / Renda Media'
-        WHEN 3 THEN 'Baixo Desempenho / Alta Renda (Potencial)'
+        WHEN 3 THEN 'Desempenho em Desenvolvimento (Potencial)'
         WHEN 4 THEN 'Baixo Desempenho / Baixa Renda (Prioritario)'
     END AS DESCRICAO_CLUSTER,
     ROUND(c.NOTA_MEDIA_ENEM, 2) AS NOTA_MEDIA_ENEM,
@@ -68,6 +68,7 @@ SELECT
     ROUND(c.PCT_ESCOLAS_INTERNET, 2) AS PCT_ESCOLAS_INTERNET,
     ROUND(c.Z_NOTA, 4) AS Z_SCORE_NOTA,
     ROUND(c.Z_RENDA, 4) AS Z_SCORE_RENDA,
+    ROUND(c.Z_INFRA, 4) AS Z_SCORE_INFRA,
     CASE c.CLUSTER_ID
         WHEN 4 THEN 'ALTA'
         WHEN 3 THEN 'MEDIA'

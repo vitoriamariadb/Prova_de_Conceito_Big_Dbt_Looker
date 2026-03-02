@@ -36,41 +36,47 @@ FROM {{ ref('raw_enem') }}
 {% else %}
 
 WITH ufs AS (
-    SELECT uf, fator_nota FROM UNNEST([
-        STRUCT('AC' AS uf, 0.88 AS fator_nota),
-        STRUCT('AL', 0.85),
-        STRUCT('AP', 0.87),
-        STRUCT('AM', 0.89),
-        STRUCT('BA', 0.90),
-        STRUCT('CE', 0.92),
-        STRUCT('DF', 1.08),
-        STRUCT('ES', 1.00),
-        STRUCT('GO', 0.98),
-        STRUCT('MA', 0.86),
-        STRUCT('MT', 0.96),
-        STRUCT('MS', 0.97),
-        STRUCT('MG', 1.02),
-        STRUCT('PA', 0.88),
-        STRUCT('PB', 0.91),
-        STRUCT('PR', 1.04),
-        STRUCT('PE', 0.93),
-        STRUCT('PI', 0.89),
-        STRUCT('RJ', 1.03),
-        STRUCT('RN', 0.90),
-        STRUCT('RS', 1.05),
-        STRUCT('RO', 0.92),
-        STRUCT('RR', 0.88),
-        STRUCT('SC', 1.06),
-        STRUCT('SP', 1.07),
-        STRUCT('SE', 0.89),
-        STRUCT('TO', 0.91)
+    SELECT uf, nota_base, renda_base FROM UNNEST([
+        -- Norte: baixo desempenho, baixa renda → Cluster 4 (Prioritário)
+        STRUCT('AC' AS uf, 508.0 AS nota_base, 1200.0 AS renda_base),
+        STRUCT('AP', 502.0, 1150.0),
+        STRUCT('AM', 510.0, 1250.0),
+        STRUCT('PA', 505.0, 1180.0),
+        STRUCT('RO', 520.0, 1350.0),
+        STRUCT('RR', 500.0, 1100.0),
+        STRUCT('TO', 518.0, 1300.0),
+        -- Nordeste baixo → Cluster 4
+        STRUCT('AL', 500.0, 1100.0),
+        STRUCT('MA', 492.0, 1050.0),
+        STRUCT('PI', 496.0, 1080.0),
+        -- Nordeste médio → Cluster 3 (Potencial)
+        STRUCT('BA', 516.0, 1280.0),
+        STRUCT('CE', 526.0, 1380.0),
+        STRUCT('PB', 520.0, 1220.0),
+        STRUCT('PE', 524.0, 1320.0),
+        STRUCT('RN', 522.0, 1240.0),
+        STRUCT('SE', 518.0, 1200.0),
+        -- Centro-Oeste médio → Cluster 2 (Médio)
+        STRUCT('GO', 540.0, 2050.0),
+        STRUCT('MT', 540.0, 1980.0),
+        STRUCT('MS', 542.0, 2020.0),
+        STRUCT('ES', 544.0, 2200.0),
+        -- Sudeste/Sul alto → Cluster 1 (Alto Desempenho)
+        STRUCT('MG', 558.0, 2450.0),
+        STRUCT('RJ', 560.0, 2700.0),
+        STRUCT('PR', 565.0, 2550.0),
+        STRUCT('RS', 570.0, 2650.0),
+        STRUCT('SC', 575.0, 2750.0),
+        STRUCT('SP', 585.0, 3200.0),
+        STRUCT('DF', 600.0, 3500.0)
     ])
 ),
 
 inscricoes_base AS (
     SELECT
         u.uf AS UF,
-        u.fator_nota,
+        u.nota_base,
+        u.renda_base,
         inscricao_num,
         CONCAT('2023', u.uf, LPAD(CAST(inscricao_num AS STRING), 8, '0')) AS ID_INSCRICAO,
         CONCAT(u.uf, '00000') AS COD_MUNICIPIO
@@ -98,24 +104,13 @@ inscricoes_com_dados AS (
             ELSE 'Indigena'
         END AS COR_RACA,
 
-        CASE CAST(FLOOR(RAND() * 10) AS INT64)
-            WHEN 0 THEN 998
-            WHEN 1 THEN 1497
-            WHEN 2 THEN 1996
-            WHEN 3 THEN 2495
-            WHEN 4 THEN 2994
-            WHEN 5 THEN 3992
-            WHEN 6 THEN 4990
-            WHEN 7 THEN 5988
-            WHEN 8 THEN 6986
-            ELSE 7984
-        END AS RENDA_FAMILIAR_ESTIMADA,
+        GREATEST(500, ROUND(renda_base + (RAND() - 0.5) * renda_base * 0.4, 0)) AS RENDA_FAMILIAR_ESTIMADA,
 
-        ROUND(400 + (RAND() * 200 + 100) * fator_nota, 2) AS NOTA_CIENCIAS_NATUREZA,
-        ROUND(400 + (RAND() * 200 + 100) * fator_nota, 2) AS NOTA_CIENCIAS_HUMANAS,
-        ROUND(400 + (RAND() * 200 + 100) * fator_nota, 2) AS NOTA_LINGUAGENS,
-        ROUND(400 + (RAND() * 200 + 100) * fator_nota, 2) AS NOTA_MATEMATICA,
-        ROUND(400 + (RAND() * 400 + 100) * fator_nota, 2) AS NOTA_REDACAO,
+        ROUND(nota_base + (RAND() - 0.5) * 80, 2) AS NOTA_CIENCIAS_NATUREZA,
+        ROUND(nota_base + (RAND() - 0.5) * 80, 2) AS NOTA_CIENCIAS_HUMANAS,
+        ROUND(nota_base + (RAND() - 0.5) * 80, 2) AS NOTA_LINGUAGENS,
+        ROUND(nota_base + (RAND() - 0.5) * 80, 2) AS NOTA_MATEMATICA,
+        ROUND(nota_base + (RAND() - 0.5) * 100, 2) AS NOTA_REDACAO,
 
         RAND() > 0.05 AS PRESENTE_TODAS_PROVAS,
 
