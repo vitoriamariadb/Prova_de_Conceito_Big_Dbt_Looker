@@ -18,6 +18,14 @@ SELECT
     ANO,
     DATA_REFERENCIA,
     UF,
+    CASE
+        WHEN UF IN ('AC','AP','AM','PA','RO','RR','TO') THEN 'Norte'
+        WHEN UF IN ('AL','BA','CE','MA','PB','PE','PI','RN','SE') THEN 'Nordeste'
+        WHEN UF IN ('DF','GO','MT','MS') THEN 'Centro-Oeste'
+        WHEN UF IN ('ES','MG','RJ','SP') THEN 'Sudeste'
+        WHEN UF IN ('PR','RS','SC') THEN 'Sul'
+        ELSE 'Desconhecida'
+    END AS REGIAO,
     COD_MUNICIPIO,
     SEXO,
     IDADE,
@@ -90,6 +98,14 @@ inscricoes_com_dados AS (
         2023 AS ANO,
         DATE('2023-01-01') AS DATA_REFERENCIA,
         UF,
+        CASE
+            WHEN UF IN ('AC','AP','AM','PA','RO','RR','TO') THEN 'Norte'
+            WHEN UF IN ('AL','BA','CE','MA','PB','PE','PI','RN','SE') THEN 'Nordeste'
+            WHEN UF IN ('DF','GO','MT','MS') THEN 'Centro-Oeste'
+            WHEN UF IN ('ES','MG','RJ','SP') THEN 'Sudeste'
+            WHEN UF IN ('PR','RS','SC') THEN 'Sul'
+            ELSE 'Desconhecida'
+        END AS REGIAO,
         COD_MUNICIPIO,
 
         CASE WHEN RAND() > 0.45 THEN 'Feminino' ELSE 'Masculino' END AS SEXO,

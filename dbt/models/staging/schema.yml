@@ -16,6 +16,12 @@ models:
         description: "Sigla da Unidade Federativa"
         tests:
           - not_null
+      - name: REGIAO
+        description: "Regiao geografica do Brasil derivada da UF: Norte, Nordeste, Centro-Oeste, Sudeste ou Sul"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Norte', 'Nordeste', 'Centro-Oeste', 'Sudeste', 'Sul', 'Desconhecida']
       - name: COD_ESCOLA
         description: "Codigo unico da escola"
         tests:
@@ -46,6 +52,12 @@ models:
           - not_null
       - name: UF
         description: "Sigla da UF da escola do participante (pode ser nulo para treineiros)"
+      - name: REGIAO
+        description: "Regiao geografica do Brasil derivada da UF: Norte, Nordeste, Centro-Oeste, Sudeste ou Sul"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Norte', 'Nordeste', 'Centro-Oeste', 'Sudeste', 'Sul', 'Desconhecida']
       - name: NOTA_MEDIA
         description: "Media das 5 notas"
       - name: RENDA_FAMILIAR_ESTIMADA

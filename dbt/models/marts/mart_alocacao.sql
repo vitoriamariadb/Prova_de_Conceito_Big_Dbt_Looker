@@ -7,6 +7,7 @@
 WITH base_uf AS (
     SELECT
         UF,
+        REGIAO,
         ANO,
         TOTAL_MATRICULAS,
         TOTAL_DOCENTES,
@@ -21,6 +22,7 @@ WITH base_uf AS (
 gaps AS (
     SELECT
         UF,
+        REGIAO,
         ANO,
         TOTAL_MATRICULAS,
         TOTAL_DOCENTES,
@@ -56,6 +58,7 @@ gaps AS (
 alocacao AS (
     SELECT
         UF,
+        REGIAO,
         ANO,
         TOTAL_MATRICULAS,
         ALUNOS_POR_DOCENTE,
@@ -82,6 +85,7 @@ alocacao AS (
 
 SELECT
     UF,
+    REGIAO,
     ANO,
     TOTAL_MATRICULAS,
     ALUNOS_POR_DOCENTE,

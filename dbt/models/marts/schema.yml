@@ -16,6 +16,12 @@ models:
         description: "Sigla da Unidade Federativa (ex: SP, RJ, MG)"
         tests:
           - not_null
+      - name: REGIAO
+        description: "Regiao geografica do Brasil derivada da UF: Norte, Nordeste, Centro-Oeste, Sudeste ou Sul"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Norte', 'Nordeste', 'Centro-Oeste', 'Sudeste', 'Sul', 'Desconhecida']
       - name: TOTAL_MATRICULAS
         description: "Soma total de matriculas na educacao basica na UF"
       - name: MATRICULAS_FUNDAMENTAL
@@ -71,6 +77,12 @@ models:
         tests:
           - not_null
           - unique
+      - name: REGIAO
+        description: "Regiao geografica do Brasil derivada da UF: Norte, Nordeste, Centro-Oeste, Sudeste ou Sul"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Norte', 'Nordeste', 'Centro-Oeste', 'Sudeste', 'Sul', 'Desconhecida']
       - name: ANO
         description: "Ano de referencia da clusterizacao (mais recente disponivel)"
         tests:
@@ -128,6 +140,12 @@ models:
         tests:
           - not_null
           - unique
+      - name: REGIAO
+        description: "Regiao geografica do Brasil derivada da UF: Norte, Nordeste, Centro-Oeste, Sudeste ou Sul"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Norte', 'Nordeste', 'Centro-Oeste', 'Sudeste', 'Sul', 'Desconhecida']
       - name: ANO
         description: "Ano de referencia da analise (mais recente disponivel)"
       - name: TOTAL_MATRICULAS

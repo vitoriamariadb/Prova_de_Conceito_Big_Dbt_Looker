@@ -9,6 +9,7 @@
 WITH features AS (
     SELECT
         UF,
+        REGIAO,
         ANO,
         NOTA_MEDIA_ENEM,
         RENDA_MEDIA_FAMILIAR,
@@ -25,6 +26,7 @@ WITH features AS (
 normalized AS (
     SELECT
         UF,
+        REGIAO,
         ANO,
         NOTA_MEDIA_ENEM,
         RENDA_MEDIA_FAMILIAR,
@@ -38,6 +40,7 @@ normalized AS (
 clustered AS (
     SELECT
         UF,
+        REGIAO,
         ANO,
         NOTA_MEDIA_ENEM,
         RENDA_MEDIA_FAMILIAR,
@@ -87,6 +90,7 @@ geo_uf AS (
 
 SELECT
     c.UF,
+    c.REGIAO,
     c.ANO,
     c.CLUSTER_ID,
     CASE c.CLUSTER_ID
