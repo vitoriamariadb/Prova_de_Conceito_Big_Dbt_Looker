@@ -1,18 +1,20 @@
-# Pagina 1: Panorama Descritivo
+# Página 1: Panorama Descritivo
 
-## Titulo
-**"Educacao Brasileira em Numeros: Panorama Nacional"**
+## Título
+**"Educação Brasileira em Números: Panorama Nacional"**
 
 ## Objetivo
-Apresentar uma visao geral da situacao educacional no Brasil, permitindo comparacoes entre estados e analise de tendencias.
+Apresentar uma visão geral da situação educacional no Brasil, permitindo comparações entre estados e análise de tendências.
+
+> **Safra dos dados:** Censo Escolar e microdados ENEM — referência 2023 (publicação INEP 2024).
 
 ---
 
-## Graficos
+## Gráficos
 
 ### 1. Scorecard: Indicadores Nacionais
 
-KPIs principais do painel: total de matriculas, total de escolas, media ENEM e percentual de escolas com internet.
+KPIs principais do painel: total de matrículas, total de escolas, média ENEM e percentual de escolas com internet.
 
 **Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
 
@@ -26,13 +28,24 @@ FROM `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
 WHERE ANO = 2023
 ```
 
+**Rótulos sugeridos nos scorecards:**
+
+| Campo | Rótulo exibido |
+|-------|----------------|
+| `SUM(TOTAL_MATRICULAS)` | Total de Matrículas |
+| `SUM(TOTAL_ESCOLAS)` | Total de Escolas |
+| `AVG(NOTA_MEDIA_ENEM)` | Média ENEM (0–1000) |
+| `AVG(PCT_ESCOLAS_INTERNET)` | % Escolas Conectadas |
+
+**Narrativa:** Os KPIs nacionais estabelecem a escala do desafio educacional. O percentual de escolas conectadas é o indicador mais crítico: abaixo de 70% sinaliza que uma parcela significativa dos alunos não tem acesso a recursos digitais durante as aulas. Use como ponto de partida para aprofundar por UF nos demais gráficos.
+
 ![Scorecard KPIs](../images/descritiva_scorecard.png)
 
 ---
 
-### 2. Distribuicao de Matriculas por UF
+### 2. Distribuição de Matrículas por UF
 
-Visualizacao da concentracao de alunos por estado, com cores por regiao.
+Visualização da concentração de alunos por estado, com cores por região.
 
 **Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
 
@@ -43,13 +56,23 @@ WHERE ANO = 2023
 GROUP BY UF
 ```
 
-![Distribuicao de Matriculas](../images/descritiva_mapa_matriculas.png)
+**Rótulos sugeridos:**
+
+| Elemento | Rótulo exibido |
+|----------|----------------|
+| Dimensão (eixo) | Estado (UF) |
+| Métrica (eixo) | Total de Matrículas |
+| Escala de cor | Intensidade de Matrículas |
+
+**Narrativa:** SP, MG e BA concentram juntos mais de 40% das matrículas do país. Essa concentração reflete tanto o peso demográfico do Sudeste quanto a extensão territorial do Nordeste. Estados menores do Norte, apesar de populações reduzidas, apresentam desafios logísticos únicos que o volume absoluto de matrículas tende a subestimar.
+
+![Distribuição de Matrículas](../images/descritiva_mapa_matriculas.png)
 
 ---
 
-### 3. Total de Matriculas por Regiao
+### 3. Total de Matrículas por Região
 
-Comparativo regional com percentuais de concentracao de alunos.
+Comparativo regional com percentuais de concentração de alunos.
 
 **Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
 
@@ -68,13 +91,33 @@ WHERE ANO = 2023
 GROUP BY 1
 ```
 
-![Matriculas por Regiao](../images/descritiva_matriculas_regiao.png)
+**Rótulos sugeridos:**
+
+| Elemento | Rótulo exibido |
+|----------|----------------|
+| Dimensão | Região |
+| Métrica | Total de Matrículas |
+| Título do gráfico | Matrículas por Região — Brasil 2023 |
+
+Cores por região:
+
+| Região | Cor (hex) |
+|--------|-----------|
+| Norte | `#943126` |
+| Nordeste | `#B7950B` |
+| Centro-Oeste | `#117A65` |
+| Sudeste | `#1B4F72` |
+| Sul | `#5DADE2` |
+
+**Narrativa:** O Sudeste responde por mais da metade das matrículas nacionais, enquanto Norte e Centro-Oeste somados representam menos de 15%. Essa assimetria exige políticas diferenciadas: programas de conectividade e infraestrutura no Norte têm impacto proporcional muito maior por escola atendida do que no Sudeste.
+
+![Matrículas por Região](../images/descritiva_matriculas_regiao.png)
 
 ---
 
 ### 4. Infraestrutura Escolar por UF
 
-Comparativo de internet e laboratorio entre estados.
+Comparativo de internet e laboratório entre estados.
 
 **Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
 
@@ -85,13 +128,29 @@ WHERE ANO = 2023
 ORDER BY PCT_ESCOLAS_INTERNET DESC
 ```
 
+**Rótulos sugeridos:**
+
+| Elemento | Rótulo exibido |
+|----------|----------------|
+| Dimensão | Estado (UF) |
+| Métrica 1 | % Escolas com Internet |
+| Métrica 2 | % Escolas com Laboratório |
+| Título | Infraestrutura Digital e Científica por UF — 2023 |
+
+| Métrica | Cor (hex) |
+|---------|-----------|
+| % Escolas com Internet | `#2874A6` |
+| % Escolas com Laboratório | `#117A65` |
+
+**Narrativa:** UFs com menos de 60% de conectividade — especialmente no Norte — concentram os maiores gaps de infraestrutura digital. O gap de laboratório é igualmente crítico: sem equipamentos físicos, o acesso à internet isolado não é suficiente para garantir educação de qualidade em ciências. Estados como MA, PA e AM requerem intervenção simultânea nas duas dimensões.
+
 ![Infraestrutura Escolar](../images/descritiva_infraestrutura.png)
 
 ---
 
-### 5. Distribuicao de Docentes por UF
+### 5. Distribuição de Docentes por UF
 
-Total de docentes por estado com cores por regiao.
+Total de docentes por estado com cores por região.
 
 **Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
 
@@ -103,13 +162,34 @@ GROUP BY UF
 ORDER BY DOCENTES DESC
 ```
 
-![Distribuicao de Docentes](../images/descritiva_docentes.png)
+**Rótulos sugeridos:**
+
+| Elemento | Rótulo exibido |
+|----------|----------------|
+| Dimensão | Estado (UF) |
+| Métrica | Total de Docentes |
+| Dimensão de cor | Região |
+| Título | Distribuição do Corpo Docente por Estado — 2023 |
+
+Cores por região (use o campo calculado `REGIAO` como dimensão de cor):
+
+| Região | Cor (hex) |
+|--------|-----------|
+| Norte | `#943126` |
+| Nordeste | `#B7950B` |
+| Centro-Oeste | `#117A65` |
+| Sudeste | `#1B4F72` |
+| Sul | `#5DADE2` |
+
+**Narrativa:** A distribuição de docentes replica o padrão de matrículas: Sudeste e Nordeste lideram em volume absoluto. Contudo, a relação alunos/docente é o indicador mais relevante para qualidade — estados com grandes contingentes podem ainda ter salas superlotadas. Combine este gráfico com o scorecard de matrículas para calcular a proporção real por UF.
+
+![Distribuição de Docentes](../images/descritiva_docentes.png)
 
 ---
 
-### 6. Nota Media ENEM por UF
+### 6. Nota Média ENEM por UF
 
-Ranking de desempenho com linhas de referencia para media nacional e meta PNE (550 pontos).
+Ranking de desempenho com linhas de referência para média nacional e meta PNE (550 pontos).
 
 **Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
 
@@ -120,23 +200,36 @@ WHERE ANO = 2023
 ORDER BY NOTA_MEDIA_ENEM DESC
 ```
 
+**Rótulos sugeridos:**
+
+| Elemento | Rótulo exibido |
+|----------|----------------|
+| Dimensão | Estado (UF) |
+| Métrica | Desempenho Médio ENEM (0–1000) |
+| Linha de referência 1 | Média Nacional |
+| Linha de referência 2 | Meta PNE (550 pts) |
+| Título | Desempenho no ENEM por Estado — 2023 |
+| Cor das barras | `#2874A6` |
+
+**Narrativa:** Apenas um punhado de estados atingem ou superam a meta do PNE de 550 pontos — DF, SC e SP lideram consistentemente. O padrão geográfico é claro: estados do Norte e Nordeste concentram os menores desempenhos, com diferença de até 80 pontos em relação aos líderes nacionais. Esse gap representa anos de defasagem curricular que exigem intervenção estrutural, não apenas programas de reforço.
+
 ![Notas ENEM por UF](../images/descritiva_notas_enem.png)
 
 ---
 
-## Narrativa
+## Narrativa Geral da Página
 
-> **"O Brasil possui milhoes de alunos matriculados na educacao basica. A analise regional revela disparidades significativas: enquanto o Sudeste concentra a maior parte das matriculas, regioes como Norte e Nordeste enfrentam desafios de infraestrutura, com percentuais mais baixos de escolas conectadas a internet."**
+> **"O Brasil possui milhões de alunos matriculados na educação básica. A análise regional revela disparidades significativas: enquanto o Sudeste concentra a maior parte das matrículas, regiões como Norte e Nordeste enfrentam desafios de infraestrutura, com percentuais mais baixos de escolas conectadas à internet. O gap de desempenho no ENEM entre estados líderes e os mais vulneráveis aponta para a necessidade urgente de políticas diferenciadas por território."**
 
 ---
 
-## Perguntas que Esta Pagina Responde
+## Perguntas que Esta Página Responde
 
-1. Quantos alunos estao matriculados em cada estado?
-2. Qual a proporcao entre regioes?
-3. Quais estados tem melhor infraestrutura escolar?
-4. Como se distribui o corpo docente pelo pais?
-5. Quais UFs estao acima ou abaixo da media no ENEM?
+1. Quantos alunos estão matriculados em cada estado?
+2. Qual a proporção entre regiões?
+3. Quais estados têm melhor infraestrutura escolar?
+4. Como se distribui o corpo docente pelo país?
+5. Quais UFs estão acima ou abaixo da média no ENEM?
 
 ---
 
@@ -144,13 +237,13 @@ ORDER BY NOTA_MEDIA_ENEM DESC
 
 **Fonte:** `mart_educacao_uf`
 
-| Coluna | Descricao |
+| Coluna | Descrição |
 |--------|-----------|
-| ANO | Ano de referencia |
+| ANO | Ano de referência |
 | UF | Sigla do estado |
-| TOTAL_MATRICULAS | Soma de matriculas |
+| TOTAL_MATRICULAS | Soma de matrículas |
 | TOTAL_DOCENTES | Soma de docentes |
 | TOTAL_ESCOLAS | Total de escolas |
 | PCT_ESCOLAS_INTERNET | % de escolas com internet |
-| PCT_ESCOLAS_LABORATORIO | % de escolas com laboratorio |
-| NOTA_MEDIA_ENEM | Media do ENEM por UF |
+| PCT_ESCOLAS_LABORATORIO | % de escolas com laboratório |
+| NOTA_MEDIA_ENEM | Média do ENEM por UF |

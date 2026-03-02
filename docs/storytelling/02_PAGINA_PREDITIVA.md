@@ -1,28 +1,30 @@
-# Pagina 2: Analise Preditiva
+# Página 2: Análise Preditiva
 
-## Titulo
+## Título
 **"Fatores de Sucesso: O Que Influencia o Desempenho Educacional?"**
 
 ## Objetivo
-Identificar correlacoes entre variaveis de infraestrutura e desempenho educacional, permitindo entender quais fatores mais impactam os resultados.
+Identificar correlações entre variáveis de infraestrutura e desempenho educacional, permitindo entender quais fatores mais impactam os resultados.
+
+> **Safra dos dados:** Censo Escolar e microdados ENEM — referência 2023 (publicação INEP 2024).
 
 ---
 
 ## Metodologia Aplicada
 
-### Regressao Linear (regressao_educacao.py)
+### Regressão Linear (regressao_educacao.py)
 Modelo: `Nota ENEM = B0 + B1 x % Escolas com Internet + e`
 
-### Correlacao de Pearson (analise_correlacao_causalidade.py)
-Mede a forca da relacao linear entre variaveis (-1 a +1)
+### Correlação de Pearson (analise_correlacao_causalidade.py)
+Mede a força da relação linear entre variáveis (-1 a +1)
 
 ---
 
-## Graficos
+## Gráficos
 
 ### 1. Scatter Plot: % Internet vs Nota ENEM
 
-Dispersao com linha de tendencia mostrando a correlacao entre infraestrutura digital e desempenho.
+Dispersão com linha de tendência mostrando a correlação entre infraestrutura digital e desempenho.
 
 **Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
 
@@ -32,13 +34,25 @@ FROM `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
 WHERE ANO = 2023
 ```
 
-![Regressao Internet vs Nota](../images/regressao_corporativo.png)
+**Rótulos sugeridos:**
+
+| Elemento | Rótulo exibido |
+|----------|----------------|
+| Eixo X | % Escolas Conectadas à Internet |
+| Eixo Y | Desempenho Médio ENEM (0–1000) |
+| Rótulos de ponto | UF |
+| Título | Conectividade Escolar vs. Desempenho no ENEM — 2023 |
+| Cor dos pontos | `#2874A6` |
+
+**Narrativa:** A dispersão evidencia uma correlação positiva clara: estados com maior percentual de escolas conectadas tendem a apresentar notas ENEM mais altas. A linha de tendência ascendente confirma que infraestrutura digital é um preditor relevante de desempenho. Estados como AP e MA — baixo índice de conectividade e notas abaixo da média — são os candidatos naturais a programas de expansão de acesso digital.
+
+![Regressão Internet vs Nota](../images/regressao_corporativo.png)
 
 ---
 
-### 2. Heatmap: Matriz de Correlacao
+### 2. Heatmap: Matriz de Correlação
 
-Mapa de calor identificando quais variaveis tem maior correlacao com o desempenho.
+Mapa de calor identificando quais variáveis têm maior correlação com o desempenho.
 
 **Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_correlacoes`, `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
 
@@ -46,11 +60,30 @@ Mapa de calor identificando quais variaveis tem maior correlacao com o desempenh
 SELECT * FROM `provas-de-conceitos.mec_educacao_dev.mart_correlacoes`
 ```
 
-![Matriz de Correlacao](../images/preditiva_heatmap_correlacao.png)
+**Rótulos sugeridos:**
+
+| Elemento | Rótulo exibido |
+|----------|----------------|
+| Dimensão linha | Variável A |
+| Dimensão coluna | Variável B |
+| Métrica | Correlação de Pearson |
+| Título | Matriz de Correlação entre Indicadores Educacionais |
+
+Escala de cor do heatmap:
+
+| Valor | Cor (hex) | Significado |
+|-------|-----------|-------------|
+| -1.0 | `#943126` | Correlação negativa forte |
+| 0.0 | `#F8F9F9` | Sem correlação |
+| +1.0 | `#1B4F72` | Correlação positiva forte |
+
+**Narrativa:** O heatmap revela quais variáveis se movem juntas. Correlações acima de 0.6 (células em azul escuro) indicam relações robustas que merecem atenção em políticas públicas. Se PCT_ESCOLAS_INTERNET e NOTA_MEDIA_ENEM aparecem em azul escuro, isso reforça o argumento de que conectividade não é apenas infraestrutura — é fator educacional direto.
+
+![Matriz de Correlação](../images/preditiva_heatmap_correlacao.png)
 
 ---
 
-### 3. Grafico Combo: Infraestrutura Digital vs Desempenho por UF
+### 3. Gráfico Combo: Infraestrutura Digital vs Desempenho por UF
 
 Barras (% internet) + linha (nota ENEM) para comparar simultaneamente infraestrutura e desempenho.
 
@@ -63,13 +96,29 @@ WHERE ANO = 2023
 ORDER BY NOTA_MEDIA_ENEM DESC
 ```
 
+**Rótulos sugeridos:**
+
+| Elemento | Rótulo exibido |
+|----------|----------------|
+| Dimensão | Estado (UF) |
+| Métrica barra | % Escolas Conectadas |
+| Métrica linha | Desempenho Médio ENEM (0–1000) |
+| Título | Conectividade e Desempenho por Estado — 2023 |
+
+| Série | Cor (hex) |
+|-------|-----------|
+| Barras — % Internet | `#2874A6` |
+| Linha — Nota ENEM | `#943126` |
+
+**Narrativa:** O gráfico combo permite identificar anomalias: estados onde a linha de nota não acompanha a altura das barras de conectividade podem indicar outros fatores limitantes (pobreza, distância de centros urbanos, qualidade docente). Estados onde ambas as métricas estão baixas são candidatos a intervenção prioritária integrada.
+
 ![Combo Internet e Nota](../images/preditiva_combo_internet_nota.png)
 
 ---
 
 ### 4. Bullet Chart: Desempenho vs Meta PNE
 
-Cada UF comparada a meta de 550 pontos do PNE, com gap positivo ou negativo.
+Cada UF comparada à meta de 550 pontos do PNE, com gap positivo ou negativo.
 
 **Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
 
@@ -79,54 +128,102 @@ FROM `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
 WHERE ANO = 2023
 ```
 
+**Rótulos sugeridos:**
+
+| Elemento | Rótulo exibido |
+|----------|----------------|
+| Dimensão | Estado (UF) |
+| Métrica realizada | Desempenho Médio ENEM (0–1000) |
+| Linha de meta | Meta PNE: 550 pontos |
+| Título | Gap em Relação à Meta PNE por Estado — 2023 |
+
+| Status | Cor (hex) | Critério |
+|--------|-----------|----------|
+| Acima da meta | `#1B4F72` | Nota >= 550 |
+| Abaixo da meta | `#943126` | Nota < 550 |
+
+**Narrativa:** A maioria dos estados brasileiros ainda está abaixo da meta de 550 pontos estabelecida pelo Plano Nacional de Educação. O gap médio representa anos de aprendizado não consolidado. Estados com gaps superiores a 50 pontos exigem intervenção sistêmica — não apenas reforço escolar pontual, mas revisão completa de currículo, formação de professores e infraestrutura.
+
 ![Bullet Desempenho vs Meta](../images/preditiva_bullet_desempenho.png)
 
 ---
 
-### 5. Diagrama de Mediacao
+### 5. Diagrama de Mediação
 
-Visualizacao das relacoes entre infraestrutura digital, infraestrutura fisica e desempenho educacional com coeficientes de correlacao.
+Visualização das relações entre infraestrutura digital, infraestrutura física e desempenho educacional com coeficientes de correlação.
 
 **Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`, `provas-de-conceitos.mec_educacao_dev.mart_correlacoes`
 
-![Diagrama de Mediacao](../images/preditiva_diagrama_mediacao.png)
+**Rótulos sugeridos:**
+
+| Elemento | Rótulo exibido |
+|----------|----------------|
+| Nó central | Desempenho ENEM |
+| Nós periféricos | % Escolas Conectadas / % Escolas com Laboratório |
+| Arestas | Coeficiente de Correlação de Pearson |
+| Título | Relações entre Infraestrutura e Desempenho Educacional |
+
+**Narrativa:** O diagrama de mediação revela se a infraestrutura digital age diretamente sobre o desempenho ou se é mediada por outros fatores (como infraestrutura física). Coeficientes de correlação nas arestas acima de 0.5 sugerem relações suficientemente fortes para embasar decisões de alocação de recursos.
+
+![Diagrama de Mediação](../images/preditiva_diagrama_mediacao.png)
 
 ---
 
-### 6. Tabela: Descricao dos Clusters
+### 6. Tabela: Descrição dos Clusters
 
-Resumo dos clusters identificados com quantidade de UFs, media ENEM e percentual de internet.
+Resumo dos clusters identificados com quantidade de UFs, média ENEM e percentual de internet.
 
 **Fonte BigQuery:** `provas-de-conceitos.mec_educacao_dev.mart_clusters`, `provas-de-conceitos.mec_educacao_dev.mart_educacao_uf`
+
+**Rótulos sugeridos das colunas:**
+
+| Campo | Rótulo exibido |
+|-------|----------------|
+| `CLUSTER_ID` | Cluster |
+| `DESCRICAO_CLUSTER` | Perfil do Grupo |
+| `COUNT(UF)` | Nº de Estados |
+| `AVG(NOTA_MEDIA_ENEM)` | Média ENEM (0–1000) |
+| `PRIORIDADE_INVESTIMENTO` | Prioridade |
+
+Formatação condicional em `PRIORIDADE_INVESTIMENTO`:
+
+| Valor | Cor (hex) |
+|-------|-----------|
+| ALTA | `#943126` |
+| MEDIA | `#B7950B` |
+| BAIXA | `#117A65` |
+| MONITORAMENTO | `#2874A6` |
+
+**Narrativa:** A tabela de clusters traduz o modelo matemático em linguagem de gestão. O cluster com prioridade ALTA concentra os estados que mais precisam de atenção imediata — são os mesmos que aparecem em vermelho no mapa de clusters. Use esta tabela para definir critérios de elegibilidade em editais de programas federais de conectividade e infraestrutura escolar.
 
 ![Tabela de Clusters](../images/preditiva_tabela_clusters.png)
 
 ---
 
-## Narrativa
+## Narrativa Geral da Página
 
-> **"A analise de regressao revela que o percentual de escolas com internet e um fator fortemente associado ao desempenho no ENEM. Estados com maior conectividade, como DF, SP e SC, apresentam notas consistentemente acima da media nacional."**
+> **"A análise de regressão revela que o percentual de escolas com internet é um fator fortemente associado ao desempenho no ENEM. Estados com maior conectividade, como DF, SP e SC, apresentam notas consistentemente acima da média nacional."**
 
-> **"A infraestrutura digital atua como variavel-chave: investimentos em conectividade escolar estao diretamente associados a melhores resultados educacionais. Isso sugere que politicas de universalizacao do acesso a internet nas escolas podem ajudar a reduzir desigualdades."**
-
----
-
-## Cuidados na Interpretacao
-
-**IMPORTANTE:** Correlacao NAO implica causalidade!
-
-- A relacao internet x nota pode ter confundidores
-- Dados transversais limitam inferencias causais
-- Sempre considere explicacoes alternativas
+> **"A infraestrutura digital atua como variável-chave: investimentos em conectividade escolar estão diretamente associados a melhores resultados educacionais. Isso sugere que políticas de universalização do acesso à internet nas escolas podem ajudar a reduzir desigualdades."**
 
 ---
 
-## Perguntas que Esta Pagina Responde
+## Cuidados na Interpretação
 
-1. Qual a relacao entre infraestrutura digital e desempenho no ENEM?
-2. Quais variaveis mais influenciam as notas?
-3. O acesso a internet impacta o desempenho?
-4. Quais estados estao abaixo da meta de desempenho?
+**IMPORTANTE:** Correlação NÃO implica causalidade!
+
+- A relação internet x nota pode ter confundidores
+- Dados transversais limitam inferências causais
+- Sempre considere explicações alternativas
+
+---
+
+## Perguntas que Esta Página Responde
+
+1. Qual a relação entre infraestrutura digital e desempenho no ENEM?
+2. Quais variáveis mais influenciam as notas?
+3. O acesso à internet impacta o desempenho?
+4. Quais estados estão abaixo da meta de desempenho?
 5. Quais grupos de UFs compartilham perfis educacionais semelhantes?
 
 ---
@@ -135,10 +232,10 @@ Resumo dos clusters identificados com quantidade de UFs, media ENEM e percentual
 
 **Fonte:** `mart_correlacoes`
 
-| Coluna | Descricao |
+| Coluna | Descrição |
 |--------|-----------|
-| VARIAVEL_1 | Primeira variavel |
-| VARIAVEL_2 | Segunda variavel |
-| CORRELACAO_PEARSON | Coeficiente de correlacao |
-| P_VALUE | Significancia estatistica |
+| VARIAVEL_1 | Primeira variável |
+| VARIAVEL_2 | Segunda variável |
+| CORRELACAO_PEARSON | Coeficiente de correlação |
+| P_VALUE | Significância estatística |
 | N_OBSERVACOES | Tamanho da amostra |
