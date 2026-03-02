@@ -710,25 +710,38 @@ Crie uma **tabela simples** com os campos abaixo, sem agregação:
 
 ---
 
-#### 9.2c — Redução de Evasão por Cenário
+#### 9.2c — Quantos alunos a mais permanecem na escola?
 
 **Título:**
 ```
-Impacto estimado na redução do abandono escolar
+Redução Projetada na Evasão Escolar por Cenário de Investimento
+```
+
+**Subtítulo do gráfico (caixa de texto acima):**
+```
+Como ler: o eixo X mostra o quanto o orçamento aumenta (5% a 30%).
+O eixo Y mostra quantos pontos percentuais a taxa de abandono escolar diminui.
+Exemplo: com +20% de orçamento, a evasão cai 1,6 p.p. — se hoje 10% dos alunos
+abandonam a escola, esse número cairia para 8,4%.
 ```
 
 | Configuração | Valor |
 |-------------|-------|
 | Tipo | Gráfico de barras (vertical) |
-| Dimensão (eixo X) | `CENARIO_NOME` — rótulo: `Aumento Orçamentário` |
+| Dimensão (eixo X) | `CENARIO_NOME` — rótulo: `Aumento no Orçamento de Educação` |
 | Ordenação | `AUMENTO_PERCENTUAL` **crescente** (5% → 30%) |
-| Métrica | `REDUCAO_ABANDONO_PCT` — rótulo: `Redução de Evasão (p.p.)` |
-| Dimensão de cor | `TIPO_CENARIO` |
-| Formato da métrica | Número com 1 decimal + sufixo ` p.p.` |
+| Métrica | `REDUCAO_ABANDONO_PCT` — rótulo: `Redução na Evasão (pontos percentuais)` |
+| Dimensão de cor | `TIPO_CENARIO` — rótulo: `Perfil de Risco` |
+| Formato da métrica | **Número** com 1 decimal — **não usar formato `%`** |
 
-> Os valores de 0,4 a 2,4 pontos percentuais representam redução na taxa de abandono
-> escolar — não são percentuais de outra métrica. Exibir como "%" causaria confusão
-> com o eixo X (que também mostra percentuais de aumento orçamentário).
+> **Por que não usar `%` no eixo Y:**
+> O eixo X já exibe percentuais de aumento orçamentário (5%, 10%...).
+> O eixo Y mede **pontos percentuais de evasão** — uma unidade diferente.
+> Formatar o Y como `%` cria a leitura errada de "2% de algo", quando o correto é
+> "2 pontos percentuais a menos na taxa de abandono".
+> Use o rótulo **`p.p.`** para deixar a distinção visível no gráfico.
+
+> **Cores:** as mesmas do gráfico 9.2a — Conservador `#5DADE2`, Moderado `#2874A6`, Agressivo `#943126`.
 
 ![Simulação de Cenários](images/prescritiva_cenarios.png)
 
