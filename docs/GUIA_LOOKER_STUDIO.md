@@ -636,11 +636,17 @@ Investimento Necessário por Estado — Estimativa 2023
 
 ---
 
-### 9.2 Impacto por Cenário de Investimento
+### 9.2 Retorno do Investimento por Cenário — Nota Projetada vs. Nota Atual
+
+> **Narrativa:** A pergunta central desta seção é "quanto a educação melhora por real investido?"
+> O modelo projeta que cada ponto percentual de aumento orçamentário equivale a +0,4 ponto
+> na nota média do ENEM nacional. O trade-off não é entre cenários que funcionam e cenários
+> que não funcionam — todos funcionam linearmente. O trade-off é entre **impacto e risco fiscal**.
+> O cenário Moderado (15-20%) representa o ponto de equilíbrio: ganho educacional expressivo
+> com viabilidade orçamentária.
 
 **Fonte:**
 ```
-Censo Escolar da Educação Básica 2023 — INEP/MEC
 Microdados do ENEM 2023 — INEP/MEC
 ```
 
@@ -649,23 +655,80 @@ Microdados do ENEM 2023 — INEP/MEC
 provas-de-conceitos.mec_educacao_dev.mart_simulacao_cenarios
 ```
 
+---
+
+#### 9.2a — Ganho Projetado no ENEM por Cenário (gráfico principal)
+
 **Título:**
 ```
-Impacto Projetado por Cenário de Investimento
+Quanto o ENEM melhora a cada nível de investimento?
 ```
 
 | Configuração | Valor |
 |-------------|-------|
-| Tipo | Gráfico de barras agrupadas (vertical) |
-| Dimensão | `CENARIO_NOME` — rótulo: `Cenário de Investimento` |
-| Ordenação | `AUMENTO_PERCENTUAL` crescente |
+| Tipo | Gráfico de barras (vertical) |
+| Dimensão (eixo X) | `CENARIO_NOME` — rótulo: `Aumento Orçamentário` |
+| Ordenação | `AUMENTO_PERCENTUAL` **crescente** (5% → 30%) |
+| Métrica | `IMPACTO_NOTA_ENEM_PONTOS` — rótulo: `Ganho no ENEM (pontos)` |
+| Dimensão de cor | `TIPO_CENARIO` — rótulo: `Perfil de Risco` |
+| Formato da métrica | **Número** com 1 decimal — **NÃO usar formato percentual** |
 
-**Métricas:**
+> Cores por perfil de risco:
 
-| Campo BigQuery | Rótulo exibido | Cor |
-|----------------|----------------|-----|
-| `IMPACTO_NOTA_ENEM_PONTOS` | `Ganho Estimado no ENEM (pontos)` | `#1B4F72` |
-| `REDUCAO_ABANDONO_PCT` | `Redução Estimada de Abandono (%)` | `#117A65` |
+| Valor | Cor | Significado |
+|-------|-----|-------------|
+| `Conservador` | `#5DADE2` | Baixo risco fiscal — ganho de 2 a 4 pts |
+| `Moderado` | `#2874A6` | Risco administrável — ganho de 6 a 8 pts |
+| `Agressivo` | `#943126` | Alto risco fiscal — ganho de 10 a 12 pts |
+
+> **Atenção:** NÃO adicionar `TIPO_CENARIO` no campo "Dimensão detalhada". Usá-lo apenas
+> como cor. Isso garante uma barra por cenário, colorida pelo perfil de risco.
+
+---
+
+#### 9.2b — Nota Atual vs. Nota Projetada por Cenário (scorecard comparativo)
+
+**Título:**
+```
+De onde partimos e onde podemos chegar
+```
+
+Crie uma **tabela simples** com os campos abaixo, sem agregação:
+
+| Campo BigQuery | Rótulo exibido | Formato |
+|----------------|----------------|---------|
+| `CENARIO_NOME` | `Cenário` | Texto |
+| `TIPO_CENARIO` | `Perfil de Risco` | Texto |
+| `NOTA_BASE` | `Nota Atual (média nacional)` | Número — 1 decimal |
+| `IMPACTO_NOTA_ENEM_PONTOS` | `Ganho Projetado (pts)` | Número — 1 decimal |
+| `NOTA_PROJETADA` | `Nota Projetada` | Número — 1 decimal |
+| `AVALIACAO_RISCO` | `Avaliação de Risco` | Texto |
+
+> Esta tabela ancora a simulação num número concreto: o leitor vê que a nota média
+> atual é ~551 e que um investimento moderado de 20% projetaria ~559 — cruzando a
+> meta de 550 pts do PNE para os estados que ainda estão abaixo.
+
+---
+
+#### 9.2c — Redução de Evasão por Cenário
+
+**Título:**
+```
+Impacto estimado na redução do abandono escolar
+```
+
+| Configuração | Valor |
+|-------------|-------|
+| Tipo | Gráfico de barras (vertical) |
+| Dimensão (eixo X) | `CENARIO_NOME` — rótulo: `Aumento Orçamentário` |
+| Ordenação | `AUMENTO_PERCENTUAL` **crescente** (5% → 30%) |
+| Métrica | `REDUCAO_ABANDONO_PCT` — rótulo: `Redução de Evasão (p.p.)` |
+| Dimensão de cor | `TIPO_CENARIO` |
+| Formato da métrica | Número com 1 decimal + sufixo ` p.p.` |
+
+> Os valores de 0,4 a 2,4 pontos percentuais representam redução na taxa de abandono
+> escolar — não são percentuais de outra métrica. Exibir como "%" causaria confusão
+> com o eixo X (que também mostra percentuais de aumento orçamentário).
 
 ![Simulação de Cenários](images/prescritiva_cenarios.png)
 
