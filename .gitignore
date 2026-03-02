@@ -17,8 +17,11 @@ credentials/
 data/
 *.csv
 
-# Docs (gerados localmente)
-docs/
+# Docs — apenas arquivos de uso interno ignorados
+docs/GUIA_LOOKER_STUDIO.md
+docs/home_intro.md
+docs/conclusao.md
+docs/storytelling/
 
 # Python
 __pycache__/
