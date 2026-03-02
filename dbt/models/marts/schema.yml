@@ -80,8 +80,9 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['1', '2', '3', '4']
-              quote: false
+              arguments:
+                values: ['1', '2', '3', '4']
+                quote: false
       - name: DESCRICAO_CLUSTER
         description: "Descricao qualitativa do cluster baseada em desempenho e renda"
       - name: NOTA_MEDIA_ENEM
@@ -98,7 +99,8 @@ models:
         description: "Nivel de prioridade para alocacao de recursos: ALTA, MEDIA, BAIXA ou MONITORAMENTO"
         tests:
           - accepted_values:
-              values: ['ALTA', 'MEDIA', 'BAIXA', 'MONITORAMENTO']
+              arguments:
+                values: ['ALTA', 'MEDIA', 'BAIXA', 'MONITORAMENTO']
       - name: DATA_PROCESSAMENTO
         description: "Timestamp de quando o registro foi processado"
 
@@ -126,7 +128,8 @@ models:
         description: "Classificacao do desempenho no ENEM: CRITICO (<500), ATENCAO (500-550), REGULAR (550-600) ou ADEQUADO (>600)"
         tests:
           - accepted_values:
-              values: ['CRITICO', 'ATENCAO', 'REGULAR', 'ADEQUADO']
+              arguments:
+                values: ['CRITICO', 'ATENCAO', 'REGULAR', 'ADEQUADO']
       - name: CUSTO_DOCENTES_MENSAL_BRL
         description: "Custo mensal estimado para contratacao dos docentes necessarios (em reais)"
       - name: CUSTO_INTERNET_ESTIMADO_BRL
@@ -151,7 +154,8 @@ models:
         description: "Classificacao do cenario: Conservador, Moderado ou Agressivo"
         tests:
           - accepted_values:
-              values: ['Conservador', 'Moderado', 'Agressivo']
+              arguments:
+                values: ['Conservador', 'Moderado', 'Agressivo']
       - name: TOTAL_MATRICULAS_BRASIL
         description: "Total de matriculas no Brasil no ano de referencia"
       - name: NOTA_BASE

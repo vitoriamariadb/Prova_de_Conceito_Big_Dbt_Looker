@@ -25,7 +25,8 @@ seeds:
         description: "Regiao geografica do Brasil: Norte, Nordeste, Centro-Oeste, Sudeste ou Sul"
         tests:
           - accepted_values:
-              values: ['Norte', 'Nordeste', 'Centro-Oeste', 'Sudeste', 'Sul']
+              arguments:
+                values: ['Norte', 'Nordeste', 'Centro-Oeste', 'Sudeste', 'Sul']
       - name: LATITUDE
         description: "Coordenada geografica latitude em graus decimais (negativo para sul)"
       - name: LONGITUDE
@@ -50,22 +51,25 @@ seeds:
         tests:
           - not_null
           - accepted_values:
-              values: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
-              quote: false
+              arguments:
+                values: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+                quote: false
       - name: DIA
         description: "Dia do mes (sempre 1 nesta granularidade)"
       - name: TRIMESTRE
         description: "Trimestre do ano (1 a 4)"
         tests:
           - accepted_values:
-              values: ['1', '2', '3', '4']
-              quote: false
+              arguments:
+                values: ['1', '2', '3', '4']
+                quote: false
       - name: SEMESTRE
         description: "Semestre do ano (1 ou 2)"
         tests:
           - accepted_values:
-              values: ['1', '2']
-              quote: false
+              arguments:
+                values: ['1', '2']
+                quote: false
       - name: DIA_SEMANA
         description: "Numero do dia da semana (1=Domingo a 7=Sabado)"
       - name: NOME_MES
@@ -78,9 +82,11 @@ seeds:
         description: "Indicador de periodo: LETIVO ou FERIAS"
         tests:
           - accepted_values:
-              values: ['LETIVO', 'FERIAS']
+              arguments:
+                values: ['LETIVO', 'FERIAS']
       - name: FERIADO_NACIONAL
         description: "Indicador se o primeiro dia do mes e feriado nacional (S/N)"
         tests:
           - accepted_values:
-              values: ['S', 'N']
+              arguments:
+                values: ['S', 'N']

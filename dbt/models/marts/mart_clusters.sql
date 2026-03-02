@@ -43,6 +43,7 @@ clustered AS (
         PCT_ESCOLAS_INTERNET,
         Z_NOTA,
         Z_RENDA,
+        Z_INFRA,
         CASE
             WHEN Z_NOTA > 0.5 AND Z_RENDA > 0.5 THEN 1
             WHEN Z_NOTA > 0 AND Z_RENDA > 0 THEN 2
