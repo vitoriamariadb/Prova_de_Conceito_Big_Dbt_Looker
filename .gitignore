@@ -1,6 +1,7 @@
 # dbt
 target/
 dbt_packages/
+dbt_internal_packages/
 logs/
 dbt/profiles.yml
 dbt/.user.yml
@@ -8,12 +9,16 @@ dbt/package-lock.yml
 
 # Credentials
 *.json
+Credentials/
 credentials/
 !dbt/packages.yml
 
 # Dados (já carregados no BigQuery)
 data/
 *.csv
+
+# Docs (gerados localmente)
+docs/
 
 # Python
 __pycache__/
