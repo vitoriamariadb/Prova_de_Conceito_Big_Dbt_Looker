@@ -101,6 +101,22 @@ models:
           - accepted_values:
               arguments:
                 values: ['ALTA', 'MEDIA', 'BAIXA', 'MONITORAMENTO']
+      - name: LATITUDE_UF
+        description: "Latitude do centroide geografico da UF (graus decimais). Utilizada como dimensao de localizacao no mapa de bolhas do Looker Studio"
+      - name: LONGITUDE_UF
+        description: "Longitude do centroide geografico da UF (graus decimais). Utilizada como dimensao de localizacao no mapa de bolhas do Looker Studio"
+      - name: STATUS_DESEMPENHO
+        description: "Classificacao do desempenho no ENEM: CRITICO (<500), ATENCAO (500-550), REGULAR (550-600) ou ADEQUADO (>600). Oriundo de mart_alocacao"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['CRITICO', 'ATENCAO', 'REGULAR', 'ADEQUADO']
+      - name: GAP_INTERNET_PCT
+        description: "Pontos percentuais faltantes para atingir 90 porcento das escolas com internet. Oriundo de mart_alocacao"
+      - name: GAP_LABORATORIO_PCT
+        description: "Pontos percentuais faltantes para atingir 70 porcento das escolas com laboratorio. Oriundo de mart_alocacao"
+      - name: INVESTIMENTO_TOTAL_ESTIMADO_BRL
+        description: "Soma total dos custos estimados para a UF (docentes + internet + laboratorio em reais). Oriundo de mart_alocacao"
       - name: DATA_PROCESSAMENTO
         description: "Timestamp de quando o registro foi processado"
 

@@ -499,7 +499,56 @@ Matriz de Correlação entre Indicadores Educacionais
 
 ---
 
-### 8.4 Perfis de Clusters — Tabela Descritiva
+### 8.4 Mapa de Bolhas — Agrupamento por UF
+
+**Fonte:**
+```
+Censo Escolar da Educação Básica 2023 — INEP/MEC
+Microdados do ENEM 2023 — INEP/MEC
+```
+
+**Tabela BigQuery:**
+```
+provas-de-conceitos.mec_educacao_dev_marts.mart_clusters
+```
+
+**Título:**
+```
+Mapa de Bolhas — Agrupamento de Estados por Perfil Educacional
+```
+
+| Configuração | Valor |
+|-------------|-------|
+| Tipo | Google Maps |
+| Dimensão de localização — Latitude | `LATITUDE_UF` |
+| Dimensão de localização — Longitude | `LONGITUDE_UF` |
+| Métrica de tamanho | `INVESTIMENTO_TOTAL_ESTIMADO_BRL` — rótulo: `Investimento Estimado (R$)` |
+| Dimensão de cor | `CLUSTER_ID` — rótulo: `Cluster` |
+| Rótulos dos pontos | `UF` |
+
+**Campos disponíveis para tooltip (adicionar como dimensões secundárias):**
+
+| Campo BigQuery | Rótulo sugerido |
+|----------------|-----------------|
+| `STATUS_DESEMPENHO` | `Status de Desempenho` |
+| `GAP_INTERNET_PCT` | `Gap Internet (p.p.)` |
+| `GAP_LABORATORIO_PCT` | `Gap Laboratório (p.p.)` |
+| `DESCRICAO_CLUSTER` | `Perfil do Cluster` |
+
+**Cores por cluster** (as mesmas do scatter 8.1):
+
+| Cluster | Perfil | Cor |
+|---------|--------|-----|
+| 1 | Alto Desempenho | `#1B4F72` |
+| 2 | Médio | `#2874A6` |
+| 3 | Potencial | `#B7950B` |
+| 4 | Prioritário | `#943126` |
+
+> Como configurar: no painel de dados do gráfico Google Maps, selecione **Localização** > **Campo de latitude/longitude**. Mapeie `LATITUDE_UF` para Latitude e `LONGITUDE_UF` para Longitude. O Looker Studio posicionará cada bolha no centroide da UF.
+
+---
+
+### 8.5 Perfis de Clusters — Tabela Descritiva
 
 **Fonte:**
 ```
