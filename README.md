@@ -2,7 +2,7 @@
 
 Pipeline de dados educacionais do MEC/INEP com clusterização de estados, simulação de cenários de investimento e dashboard analítico em quatro camadas: descritiva, preditiva, prescritiva e executiva.
 
-**[Acessar o projeto completo](https://github.com/vitoriamariadb/Prova_de_Conceito_Big_Dbt_Looker/tree/main)**
+**[Acessar o projeto completo.](https://lookerstudio.google.com/reporting/3825568c-1918-496f-8e10-4e8c051cfefd/page/p_222najef1d)**
 
 ---
 
